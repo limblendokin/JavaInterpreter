@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A26D7282-4584-4401-B311-EDBAF329C5CA}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Lab1</RootNamespace>
+    <AssemblyName>Lab1</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attributes.cs" />
+    <Compile Include="AttributesFolder\AttributeBootstrapMethods.cs" />
+    <Compile Include="AttributesFolder\AttributeCode.cs" />
+    <Compile Include="AttributesFolder\AttributeConstantValue.cs" />
+    <Compile Include="AttributesFolder\AttributeLineNumberTable.cs" />
+    <Compile Include="AttributesFolder\AttributeSourceFile.cs" />
+    <Compile Include="AttributesFolder\AttributeStackMapTable.cs" />
+    <Compile Include="AttributesFolder\AttributeSuper.cs" />
+    <Compile Include="ClassEntity.cs" />
+    <Compile Include="ClassesTable.cs" />
+    <Compile Include="ConstantPool.cs" />
+    <Compile Include="ConstantsFolder\ConstantInterfaceMethodRef.cs" />
+    <Compile Include="ConstantsFolder\ConstantPackage.cs" />
+    <Compile Include="ConstantsFolder\ConstantModule.cs" />
+    <Compile Include="ConstantsFolder\ConstantInvokeDynamic.cs" />
+    <Compile Include="ConstantsFolder\ConstantMethodType.cs" />
+    <Compile Include="ConstantsFolder\ConstantMethodHandle.cs" />
+    <Compile Include="ConstantsFolder\ConstantUtf8.cs" />
+    <Compile Include="ConstantsFolder\ConstantNameAndType.cs" />
+    <Compile Include="ConstantsFolder\ConstantDouble.cs" />
+    <Compile Include="ConstantsFolder\ConstantLong.cs" />
+    <Compile Include="ConstantsFolder\ConstantFloat.cs" />
+    <Compile Include="ConstantsFolder\ConstantInteger.cs" />
+    <Compile Include="ConstantsFolder\ConstantString.cs" />
+    <Compile Include="ConstantsFolder\ConstantMethodRef.cs" />
+    <Compile Include="ConstantsFolder\ConstantFieldRef.cs" />
+    <Compile Include="ConstantsFolder\ConstantClass.cs" />
+    <Compile Include="ConstantsFolder\Constant.cs" />
+    <Compile Include="Field.cs" />
+    <Compile Include="Frame.cs" />
+    <Compile Include="Heap.cs" />
+    <Compile Include="Helper.cs" />
+    <Compile Include="Interfaces.cs" />
+    <Compile Include="JavaClass.cs" />
+    <Compile Include="Machine.cs" />
+    <Compile Include="Message.cs" />
+    <Compile Include="Method.cs" />
+    <Compile Include="ObjectReference.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 и x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

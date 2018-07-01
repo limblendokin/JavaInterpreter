@@ -1,0 +1,7 @@
+D:\Documents\Visual Studio 2017\Projects\LaPP\Lab1\Lab1\bin\Debug\Lab1.exe.config
+D:\Documents\Visual Studio 2017\Projects\LaPP\Lab1\Lab1\bin\Debug\Lab1.exe
+D:\Documents\Visual Studio 2017\Projects\LaPP\Lab1\Lab1\bin\Debug\Lab1.pdb
+D:\Documents\Visual Studio 2017\Projects\LaPP\Lab1\Lab1\obj\Debug\Lab1.exe
+D:\Documents\Visual Studio 2017\Projects\LaPP\Lab1\Lab1\obj\Debug\Lab1.pdb
+D:\Documents\Visual Studio 2017\Projects\LaPP\Lab1\Lab1\obj\Debug\Lab1.csprojAssemblyReference.cache
+D:\Documents\Visual Studio 2017\Projects\LaPP\Lab1\Lab1\obj\Debug\Lab1.csproj.CoreCompileInputs.cache
