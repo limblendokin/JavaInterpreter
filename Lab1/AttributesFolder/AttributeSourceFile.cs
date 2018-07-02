@@ -13,14 +13,14 @@ namespace Lab1.AttributesFolder
         {
             this.sourceFileIndex = sourceFileIndex;
         }
-        public static AttributeSourceFile Create(byte[] code, ref int curIndex, ref ConstantPool cp)
+        public static AttributeSourceFile Create(byte[] code, ref int curIndex, ConstantPool cp)
         {
             ushort attributeNameIndex = Helper.ToUShort(code, ref curIndex);
-            curIndex += 2;
+
             uint attributeLength = Helper.ToUInt(code, ref curIndex);
-            curIndex += 4;
+
             ushort sourceFileIndex = Helper.ToUShort(code, ref curIndex);
-            curIndex += 2;
+
             return new AttributeSourceFile(attributeNameIndex, attributeLength, sourceFileIndex);
         }
     }

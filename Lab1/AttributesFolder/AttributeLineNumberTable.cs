@@ -20,14 +20,14 @@ namespace Lab1.AttributesFolder
             this.startPC = startPC;
             this.lineNumber = lineNumber;
         }
-        public static AttributeLineNumberTable Create(byte[] code, ref int curIndex, ref ConstantPool cp)
+        public static AttributeLineNumberTable Create(byte[] code, ref int curIndex, ConstantPool cp)
         {
             ushort attributeNameIndex = Helper.ToUShort(code, ref curIndex);
-            curIndex += 2;
-            ushort attributeLength = Helper.ToUShort(code, ref curIndex);
-            curIndex += 2;
-            uint lineNumberTableLength = Helper.ToUInt(code, ref curIndex);
-            curIndex += 4;
+
+            uint attributeLength = Helper.ToUInt(code, ref curIndex);
+
+            ushort lineNumberTableLength = Helper.ToUShort(code, ref curIndex);
+
             List<byte[]> startPC = new List<byte[]>();
             byte[] tmp = new byte[2];
             

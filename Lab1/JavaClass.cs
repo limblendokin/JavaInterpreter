@@ -8,184 +8,131 @@ namespace Lab1
 {
     class JavaClass
     {
-        private byte[] magic;
-        private byte[] minor_version;
-        private byte[] major_version;
-        private byte[] constant_pool_count;
+        private uint magic;
+        private ushort minorVersion;
+        private ushort majorVersion;
+        private ushort constantPoolCount;
 
-        public short ConstantPoolCount
-        {
-            get
-            {
-                return (short)(constant_pool_count[0] * 256 + constant_pool_count[1]);
-            }
-        }
+        public ushort ConstantPoolCount => constantPoolCount;
 
-        private ConstantPool constant_pool;
-        public ConstantPool cp
-        {
-            get
-            {
-                return constant_pool;
-            }
-        }
+        private ConstantPool constantPool;
+        public ConstantPool ConstantPool => constantPool;
 
-        private byte[] access_flags;
-        public short AccessFlags
-        {
-            get
-            {
-                return (short)(access_flags[0] * 256 + access_flags[1]);
-            }
-        }
+        private ushort accessFlags;
+        public ushort AccessFlags => accessFlags;
 
         private String thisClassName;
-        public String ThisClassName
-        {
-            get
-            {
-                return thisClassName;
-            }
-        }
-        private byte[] this_class;
-        public short ThisClass
-        {
-            get
-            {
-                return (short)(this_class[0] * 256 + this_class[1]);
-            }
-        }
+        public String ThisClassName => thisClassName;
 
-        private byte[] super_class;
-        public short SuperClass
-        {
-            get
-            {
-                return (short)(super_class[0] * 256 + super_class[1]);
-            }
-        }
-        private byte[] interfaces_count;
-        public short InterfacesCount
-        {
-            get
-            {
-                return (short)(interfaces_count[0] * 256 + interfaces_count[1]);
-            }
-        }
+        private ushort thisClass;
+        public ushort ThisClass => thisClass;
+
+        private ushort superClass;
+        public ushort SuperClass => superClass;
+
+        private ushort interfacesCount;
+        public ushort InterfacesCount => interfacesCount;
 
         private Interfaces interfaces;
 
-        private byte[] fields_count;
-        public short FieldsCount
-        {
-            get
-            {
-                return (short)(fields_count[0] * 256 + fields_count[1]);
-            }
-        }
+        private ushort fieldsCount;
+        public ushort FieldsCount => fieldsCount;
 
         private List<Field> fields;
-        public List<Field> Fields
-        {
-            get
-            {
-                return fields;
-            }
-        }
+        public List<Field> Fields => fields;
 
-        private byte[] methods_count;
-        public short MethodsCount
-        {
-            get
-            {
-                return (short)(methods_count[0] * 256 + methods_count[1]);
-            }
-        }
+        private ushort methodsCount;
+        public ushort MethodsCount => methodsCount;
 
         private List<Method> methods;
-        public List<Method> Methods
-        {
-            get
-            {
-                return methods;
-            }
-        }
+        public List<Method> Methods => methods;
+
         public Method GetMethod(int index)
         {
             return methods.ElementAt(index);
         }
 
-        private byte[] attributes_count;
-        public short AttributesCount
-        {
-            get
-            {
-                return (short)(attributes_count[0] * 256 + attributes_count[1]);
-            }
-        }
+        private ushort attributesCount;
+        public ushort AttributesCount => attributesCount;
 
         private Attributes attributes;
-
-
-        private JavaClass()
-        {
-
-        }
+        
         /// <summary>
         /// Перенос данных из *.class файла в память
         /// </summary>
         /// <param name="bytecode"></param>
-        public JavaClass(byte[] bytecode)
+        public JavaClass(uint magic, ushort minorVersion, ushort majorVersion, ushort constantPoolCount,
+                         ConstantPool cp, ushort accessFlags, ushort thisClass,ushort superClass,
+                         ushort interfacesCount, Interfaces interfaces, ushort fieldsCount, List<Field> fields,
+                         ushort methodsCount, List<Method> methods, ushort attributesCount, Attributes attributes,
+                         String thisClassName)
+        {
+            this.magic = magic;
+            this.minorVersion = minorVersion;
+            this.majorVersion = majorVersion;
+            this.constantPoolCount = constantPoolCount;
+            this.constantPool = cp;
+            this.accessFlags = accessFlags;
+            this.thisClass = thisClass;
+            this.superClass = superClass;
+            this.interfacesCount = interfacesCount;
+            this.interfaces = interfaces;
+            this.fieldsCount = fieldsCount;
+            this.fields = fields;
+            this.methodsCount = methodsCount;
+            this.methods = methods;
+            this.attributesCount = attributesCount;
+            this.attributes = attributes;
+            this.thisClassName = thisClassName;
+        }
+        public static JavaClass Create(byte[] code)
         {
             int curIndex = 0;
             // ca fe ba be
-            magic = readBytes(4, ref curIndex, bytecode);
-            
+            uint magic = Helper.ToUInt(code, ref curIndex);
+
             // Версии 
-            minor_version = readBytes(2, ref curIndex, bytecode); ;
-            major_version = readBytes(2, ref curIndex, bytecode);
-            constant_pool_count = readBytes(2, ref curIndex, bytecode);
+            ushort minorVersion = Helper.ToUShort(code, ref curIndex);
+            ushort majorVersion = Helper.ToUShort(code, ref curIndex);
+            ushort constantPoolCount = Helper.ToUShort(code, ref curIndex);
 
-            constant_pool = new ConstantPool(bytecode, ConstantPoolCount, ref curIndex);
+            var constantPool = ConstantPool.Create(code, constantPoolCount, ref curIndex);
 
-            access_flags = readBytes(2, ref curIndex, bytecode);
+            ushort accessFlags = Helper.ToUShort(code, ref curIndex);
             // Индекс констанnы class текущего класса в пуле констант
-            this_class = readBytes(2, ref curIndex, bytecode);
-            super_class = readBytes(2, ref curIndex, bytecode);
-            interfaces_count = readBytes(2, ref curIndex, bytecode);
+            ushort thisClass = Helper.ToUShort(code, ref curIndex);
+            ushort superClass = Helper.ToUShort(code, ref curIndex);
+            ushort interfacesCount = Helper.ToUShort(code, ref curIndex);
 
-            interfaces = new Interfaces(bytecode, InterfacesCount, ref curIndex, ref constant_pool);
+            var interfaces = Interfaces.Create(code, interfacesCount, ref curIndex, constantPool);
 
-            fields_count = readBytes(2, ref curIndex, bytecode);
-            fields = new List<Field>();
+            ushort fieldsCount = Helper.ToUShort(code, ref curIndex);
+            var fields = new List<Field>();
 
-            for(int i = 0; i < FieldsCount; i++)
+            for (int i = 0; i < fieldsCount; i++)
             {
-                fields.Add(new Field(bytecode, FieldsCount, ref curIndex, ref constant_pool));
+                fields.Add(Field.Create(code, fieldsCount, ref curIndex, constantPool));
             }
 
-            methods_count = readBytes(2, ref curIndex, bytecode);
-            methods = new List<Method>();
+            ushort methodsCount = Helper.ToUShort(code, ref curIndex);
+            var methods = new List<Method>();
 
-            for(short i = 0; i < MethodsCount; i++)
+            for (short i = 0; i < methodsCount; i++)
             {
-                methods.Add(new Method(bytecode, MethodsCount, ref curIndex, ref constant_pool));
+                methods.Add(Method.Create(code, methodsCount, ref curIndex, constantPool));
             }
 
-            attributes_count = readBytes(2, ref curIndex, bytecode);
+            ushort attributesCount = Helper.ToUShort(code, ref curIndex);
 
-            attributes = new Attributes(bytecode, AttributesCount, ref curIndex, ref constant_pool);
+            var attributes = Attributes.Create(code, attributesCount, ref curIndex, constantPool);
 
-            thisClassName = constant_pool.getConstantUtf8(constant_pool.getConstantClass(ThisClass).NameIndex).Value;
-        }
-        public byte[] readBytes(uint count, ref int curIndex, byte[] bytecode)
-        {
-            byte[] output = new byte[count];
-            for (int i = 0; i < count; i++)
-            {
-                output[i] = bytecode[curIndex++];
-            }
-            return output;
+            String thisClassName = constantPool.getConstantUtf8(constantPool.getConstantClass(thisClass).NameIndex).Value;
+
+            return new JavaClass(magic, minorVersion, majorVersion, constantPoolCount,
+                                 constantPool, accessFlags, thisClass, superClass,
+                                 interfacesCount, interfaces, fieldsCount, fields,
+                                 methodsCount, methods, attributesCount, attributes,
+                                 thisClassName);
         }
     }
 }

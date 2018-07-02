@@ -9,7 +9,8 @@ namespace Lab1
 {
     class ConstantPool
     {
-        private List<Constant> cp;
+        //debug public
+        public List<Constant> cp;
         private List<ConstantClass> constantClasses;
         // getting constants
         public List<ConstantClass> GetConstantClasses() => constantClasses;
@@ -87,115 +88,120 @@ namespace Lab1
 
         }
         /// <summary>
-        /// Вызов конеструктора формирует пул констант данного *.class файла
+        /// Вызов конструктора формирует пул констант данного *.class файла
         /// </summary>
         /// <param name="bytecode"></param>
         /// <param name="constant_pool_count"></param>
         /// <param name="curIndex"></param>
-        public ConstantPool(byte[] bytecode, short constant_pool_count, ref int curIndex)
+        public ConstantPool(List<Constant> constantPool, List<ConstantClass> constantClasses)
+        {
+            this.cp = constantPool;
+            this.constantClasses = constantClasses;
+        }
+        public static ConstantPool Create(byte[] code, ushort constantPoolCount, ref int curIndex)
         {
             int constIndex = 0;
-            cp = new List<Constant>();
+            var cp = new List<Constant>();
             cp.Add(null);
-            constantClasses = new List<ConstantClass>();
-            while (constIndex < constant_pool_count-1)
+            var constantClasses = new List<ConstantClass>();
+            while (constIndex < constantPoolCount - 1)
             {
-                switch (bytecode[curIndex])
+                switch (code[curIndex])
                 {
                     // CONSTANT_Class
                     case 0x07:
-                        cp.Add(ConstantClass.Create(bytecode, ref curIndex));
+                        cp.Add(ConstantClass.Create(code, ref curIndex));
                         constantClasses.Add((ConstantClass)cp.Last());
                         constIndex++;
                         break;
 
                     // CONSTANT_Fieldref
                     case 0x09:
-                        cp.Add(ConstantFieldRef.Create(bytecode, ref curIndex));
+                        cp.Add(ConstantFieldRef.Create(code, ref curIndex));
                         constIndex++;
                         break;
 
                     //CONSTANT_Methodref
                     case 0x0a:
-                        cp.Add(ConstantMethodRef.Create(bytecode, ref curIndex));
+                        cp.Add(ConstantMethodRef.Create(code, ref curIndex));
                         constIndex++;
                         break;
 
                     //CONSTANT_InterfaceMethodref
                     case 0x0b:
-                        cp.Add(ConstantInterfaceMethodRef.Create(bytecode, ref curIndex));
+                        cp.Add(ConstantInterfaceMethodRef.Create(code, ref curIndex));
                         constIndex++;
                         break;
 
                     //CONSTANT_String
                     case 0x08:
-                        cp.Add(ConstantString.Create(bytecode, ref curIndex));
+                        cp.Add(ConstantString.Create(code, ref curIndex));
                         constIndex++;
                         break;
 
                     //CONSTANT_Integer
                     case 0x03:
-                        cp.Add(ConstantInteger.Create(bytecode, ref curIndex));
+                        cp.Add(ConstantInteger.Create(code, ref curIndex));
                         constIndex++;
                         break;
 
                     //CONSTANT_Float
                     case 0x04:
-                        cp.Add(ConstantFloat.Create(bytecode, ref curIndex));
+                        cp.Add(ConstantFloat.Create(code, ref curIndex));
                         constIndex++;
                         break;
 
                     //CONSTANT_Long
                     case 0x05:
-                        cp.Add(ConstantLong.Create(bytecode, ref curIndex));
+                        cp.Add(ConstantLong.Create(code, ref curIndex));
                         constIndex++;
                         break;
 
                     //CONSTANT_Double
                     case 0x06:
-                        cp.Add(ConstantDouble.Create(bytecode, ref curIndex));
+                        cp.Add(ConstantDouble.Create(code, ref curIndex));
                         constIndex++;
                         break;
 
                     //CONSTANT_NameAndType
                     case 0x0c:
-                        cp.Add(ConstantNameAndType.Create(bytecode, ref curIndex));
+                        cp.Add(ConstantNameAndType.Create(code, ref curIndex));
                         constIndex++;
                         break;
 
                     //CONSTANT_Utf8
                     case 0x01:
-                        cp.Add(ConstantUtf8.Create(bytecode, ref curIndex));
+                        cp.Add(ConstantUtf8.Create(code, ref curIndex));
                         constIndex++;
                         break;
 
                     //CONSTANT_MethodHandle
                     case 0x0f:
-                        cp.Add(ConstantMethodHandle.Create(bytecode, ref curIndex));
+                        cp.Add(ConstantMethodHandle.Create(code, ref curIndex));
                         constIndex++;
                         break;
 
                     //CONSTANT_MethodType
                     case 0x10:
-                        cp.Add(ConstantMethodType.Create(bytecode, ref curIndex));
+                        cp.Add(ConstantMethodType.Create(code, ref curIndex));
                         constIndex++;
                         break;
 
                     //CONSTANT_InvokeDynamic
                     case 0x12:
-                        cp.Add(ConstantInvokeDynamic.Create(bytecode, ref curIndex));
+                        cp.Add(ConstantInvokeDynamic.Create(code, ref curIndex));
                         constIndex++;
                         break;
 
                     //CONSTANT_Module
                     case 0x13:
-                        cp.Add(ConstantModule.Create(bytecode, ref curIndex));
+                        cp.Add(ConstantModule.Create(code, ref curIndex));
                         constIndex++;
                         break;
 
                     //CONSTANT_Package
                     case 0x14:
-                        cp.Add(ConstantPackage.Create(bytecode, ref curIndex));
+                        cp.Add(ConstantPackage.Create(code, ref curIndex));
                         constIndex++;
                         break;
 
@@ -204,6 +210,7 @@ namespace Lab1
                         break;
                 }
             }
+            return new ConstantPool(cp, constantClasses);
         }
     }
 }

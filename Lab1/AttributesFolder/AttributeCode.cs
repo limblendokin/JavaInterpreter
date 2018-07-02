@@ -10,10 +10,13 @@ namespace Lab1.AttributesFolder
     {
         private ushort maxStack;
         public ushort MaxStack { get => maxStack; }
+
         private ushort maxLocals;
         public ushort MaxLocals { get => maxLocals; }
+
         private uint codeLength;
         public uint CodeLength { get => CodeLength; }
+
         private byte[] code;
         public byte[] Code
         {
@@ -43,40 +46,31 @@ namespace Lab1.AttributesFolder
             this.attributesCount = attributesCount;
             this.attributes = attributes;
         }
-        public static AttributeCode Create(byte[] code, ref int curIndex, ref ConstantPool cp)
+        public static AttributeCode Create(byte[] code, ref int curIndex, ConstantPool cp)
         {
             ushort attributeNameIndex = Helper.ToUShort(code, ref curIndex);
-            curIndex += 2;
             
-            uint attributesLength = Helper.ToUShort(code, ref curIndex);
-            curIndex += 4;
-
-            ushort attributeLength = Helper.ToUShort(code, ref curIndex);
-            curIndex += 2;
+            uint attributesLength = Helper.ToUInt(code, ref curIndex);
 
             ushort maxStack = Helper.ToUShort(code, ref curIndex);
-            curIndex += 2;
 
             ushort maxLocals = Helper.ToUShort(code, ref curIndex);
-            curIndex += 2;
 
             uint codeLength = Helper.ToUInt(code, ref curIndex);
-            curIndex += 4;
 
             byte[] bytecode = new byte[codeLength];
             Array.Copy(code, curIndex, bytecode, 0, codeLength);
             curIndex += (int)codeLength;
 
-            uint exceptionTableLength = Helper.ToUInt(code, ref curIndex);
+            ushort exceptionTableLength = Helper.ToUShort(code, ref curIndex);
 
-            byte[] exceptionTable = new byte[exceptionTableLength];
-            Array.Copy(code, curIndex, exceptionTable, 0, exceptionTableLength);
+            byte[] exceptionTable = new byte[exceptionTableLength*8];
+            Array.Copy(code, curIndex, exceptionTable, 0, exceptionTableLength*8);
             curIndex += (int)exceptionTableLength;
 
             ushort attributesCount = Helper.ToUShort(code, ref curIndex);
-            curIndex += 2;
 
-            Attributes attributes = new Attributes(code, (short)attributesCount,ref curIndex, ref cp);
+            Attributes attributes = Attributes.Create(code, attributesCount,ref curIndex, cp);
             return new AttributeCode(attributeNameIndex, attributesLength, maxStack, maxLocals, codeLength, bytecode, exceptionTableLength, exceptionTable, attributesCount, attributes);
         }
 

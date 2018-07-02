@@ -13,13 +13,11 @@ namespace Lab1.AttributesFolder
         {
 
         }
-        public static AttributeConstantValue Create(byte[] code, ref int curIndex, ref ConstantPool cp)
+        public static AttributeConstantValue Create(byte[] code, ref int curIndex, ConstantPool cp)
         {
             ushort attributeNameIndex = Helper.ToUShort(code, ref curIndex);
-            curIndex += 2;
 
             uint attributeLength = Helper.ToUInt(code, ref curIndex);
-            curIndex += 4;
 
             return new AttributeConstantValue(attributeNameIndex, attributeLength);
         }

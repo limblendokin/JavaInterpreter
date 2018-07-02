@@ -26,8 +26,8 @@ namespace Lab1
                 // check if static
                 if (f.AccessFlags != 8)
                 {
-                    fieldNamesList.Add(jc.cp.getConstantUtf8(f.NameIndex).Value);
-                    fieldDescriptorsList.Add(jc.cp.getConstantUtf8(f.DescriptorIndex).Value);
+                    fieldNamesList.Add(jc.ConstantPool.getConstantUtf8((int)f.NameIndex).Value);
+                    fieldDescriptorsList.Add(jc.ConstantPool.getConstantUtf8((int)f.DescriptorIndex).Value);
                     fieldsList.Add(f.Value);
                 }
             }

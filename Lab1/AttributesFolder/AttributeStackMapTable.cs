@@ -15,14 +15,14 @@ namespace Lab1.AttributesFolder
         {
 
         }
-        public static AttributeStackMapTable Create(byte[] code, ref int curIndex, ref ConstantPool cp)
+        public static AttributeStackMapTable Create(byte[] code, ref int curIndex, ConstantPool cp)
         {
             ushort attributeNameIndex = Helper.ToUShort(code, ref curIndex);
-            curIndex += 2;
+
             uint attributeLength = Helper.ToUInt(code, ref curIndex);
-            curIndex += 4;
+
             ushort numberOfEntries = Helper.ToUShort(code, ref curIndex);
-            curIndex += 2;
+
             return new AttributeStackMapTable(attributeNameIndex, attributeLength, numberOfEntries);
         }
     }

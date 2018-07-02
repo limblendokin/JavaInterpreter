@@ -39,15 +39,15 @@ namespace Lab1
             JavaClass currentLoadedClass;
             if (tryGetBytecode(className, out bytecode))
             {
-                loadedClasses.Add(new JavaClass(bytecode));
+                loadedClasses.Add(JavaClass.Create(bytecode));
             }
             for (int j = 0; j < loadedClasses.Count; j++)
             {
                 currentLoadedClass = loadedClasses.ElementAt(j);
-                for (int i = 0; i < currentLoadedClass.cp.GetConstantClasses().Count; i++)
+                for (int i = 0; i < currentLoadedClass.ConstantPool.GetConstantClasses().Count; i++)
                 {
-                    ccl = currentLoadedClass.cp.GetConstantClasses();
-                    cpClassName = currentLoadedClass.cp.getConstantUtf8(currentLoadedClass.cp.GetConstantClasses().ElementAt(i).NameIndex).Value;
+                    ccl = currentLoadedClass.ConstantPool.GetConstantClasses();
+                    cpClassName = currentLoadedClass.ConstantPool.getConstantUtf8(currentLoadedClass.ConstantPool.GetConstantClasses().ElementAt(i).NameIndex).Value;
                     if (cpClassName != "java/lang/Object" && cpClassName != "java/lang/System")
                     {
                         isClassAlreadyLoaded = false;
@@ -64,7 +64,7 @@ namespace Lab1
                     {
                         if (tryGetBytecode(cpClassName, out bytecode))
                         {
-                            loadedClasses.Add(new JavaClass(bytecode));
+                            loadedClasses.Add(JavaClass.Create(bytecode));
                             Console.WriteLine("Class " + cpClassName + " loaded");
                         }
                         else
@@ -83,21 +83,14 @@ namespace Lab1
             int frameStackPointer = frames.Count - 1;
             Message msg;
             // run <clinit> for all loaded classes
-            // run main (rework this)
             currentClass = loadedClasses.First();
-            currentClass.Methods.Find()
-            foreach (Method m in currentClass.Methods)
+            
+            if (currentClass.Methods.First(m => m.ThisMethodName == "main").TryGetCodeAttribute(out codeAttribute))
             {
-                if (m.ThisMethodName == "main")
-                {
-                    if (m.TryGetCodeAttribute(out codeAttribute))
-                    {
-                        frames.Add(new Frame(currentClass, heap, codeAttribute));
-                        frameStackPointer++;
-                        break;
-                    }
-                }
+                frames.Add(new Frame(currentClass, heap, codeAttribute));
+                frameStackPointer++;
             }
+                
                 
             while (frameStackPointer >= 0)
             {
@@ -128,24 +121,9 @@ namespace Lab1
         private bool tryGetBytecode(String className, out byte[] bytecode)
         {
             String path = @"D:\Documents\Study\ЯиПП\" + className + ".class";
-            long fileLengthInBytes;
-
             if (File.Exists(path))
             {
-                using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                {
-                    fileLengthInBytes = fs.Length;
-                    bytecode = new byte[fileLengthInBytes];
-
-                    using (BinaryReader br = new BinaryReader(fs))
-                    {
-                        for (int i = 0; i < fileLengthInBytes; i++)
-                        {
-                            bytecode[i] = br.ReadByte();
-                        }
-                    }
-
-                }
+                bytecode = File.ReadAllBytes(path);
                 return true;
             }
             else

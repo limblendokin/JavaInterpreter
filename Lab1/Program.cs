@@ -19,7 +19,7 @@ namespace Lab1
 
             if (className == "")
             {
-                className = "TestingClassLoading";
+                className = "AdditionWithFunction";
                 Console.Write(className);
             }
             Machine m = new Machine(className);

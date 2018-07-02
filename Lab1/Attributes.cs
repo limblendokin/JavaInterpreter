@@ -16,36 +16,43 @@ namespace Lab1
                 return attributesTable;
             }
         }
-        private Attributes()
-        {
-
-        }
         /// <summary>
         /// При вызове конструктора происходит создание атрибута, детали которого считываются из байткода, а затем его добавление в attributesTable 
         /// </summary>
         /// <param name="bytecode"></param>
-        /// <param name="attributes_count"></param>
+        /// <param name="attributesCount"></param>
         /// <param name="curIndex"></param>
         /// <param name="cp"></param>
-        public Attributes(byte[] bytecode, short attributes_count, ref int curIndex, ref ConstantPool cp)
+        public Attributes(List<AttributeSuper> attributesTable)
         {
-            short attributeIndex = 0;
-            attributesTable = new List<AttributeSuper>();
-            int curAttributeNameIndex;
-            while (attributes_count > attributeIndex)
+            this.attributesTable = attributesTable;
+        }
+        public static Attributes Create(byte[] code, ushort attributesCount, ref int curIndex, ConstantPool cp)
+        {
+            /*List<AttributeSuper> attributesTable = new List<AttributeSuper>();
+            var dict = new Dictionary<String, Action>();
+            dict.Add("Code", () => attributesTable.Add(AttributeCode.Create(code, ref curIndex, ref cp)));
+            for(int i = 0; i < attributesCount; i++)
             {
-                curAttributeNameIndex = bytecode[curIndex] * 0x100 + bytecode[curIndex+1];
+
+            }*/
+            short attributeIndex = 0;
+            var attributesTable = new List<AttributeSuper>();
+            int curAttributeNameIndex;
+            while (attributesCount > attributeIndex)
+            {
+                curAttributeNameIndex = code[curIndex] * 0x100 + code[curIndex + 1];
                 switch (cp.getConstantUtf8(curAttributeNameIndex).Value)
                 {
                     case "Code":
-                        attributesTable.Add(AttributeCode.Create(bytecode, ref curIndex, ref cp));
+                        attributesTable.Add(AttributeCode.Create(code, ref curIndex, cp));
                         attributeIndex++;
                         break;
 
                     case "ConstantValue":
                         // TODO: not skipping bytes
                         Console.WriteLine("ConstantValue attribute was created");
-                        attributesTable.Add(AttributeSuper.Create(bytecode, ref curIndex));
+                        attributesTable.Add(AttributeSuper.Create(code, ref curIndex));
                         curIndex += (int)attributesTable.Last().AttributeLength;
                         attributeIndex++;
                         break;
@@ -53,7 +60,7 @@ namespace Lab1
                     case "StackMapTable":
                         // TODO: not skipping bytes
                         Console.WriteLine("StackMapTable attribute was created");
-                        attributesTable.Add(AttributeSuper.Create(bytecode, ref curIndex));
+                        attributesTable.Add(AttributeSuper.Create(code, ref curIndex));
                         curIndex += (int)attributesTable.Last().AttributeLength;
                         attributeIndex++;
                         break;
@@ -61,18 +68,18 @@ namespace Lab1
                     case "BootstrapMethods":
                         // TODO: not skipping bytes
                         Console.WriteLine("BootstrapMethods attribute was created");
-                        attributesTable.Add(AttributeSuper.Create(bytecode, ref curIndex));
+                        attributesTable.Add(AttributeSuper.Create(code, ref curIndex));
                         curIndex += (int)attributesTable.Last().AttributeLength;
                         attributeIndex++;
                         break;
 
                     case "LineNumberTable":
-                        attributesTable.Add(AttributeLineNumberTable.Create(bytecode, ref curIndex, ref cp));
+                        attributesTable.Add(AttributeLineNumberTable.Create(code, ref curIndex, cp));
                         attributeIndex++;
                         break;
 
                     case "SourceFile":
-                        attributesTable.Add(AttributeSourceFile.Create(bytecode, ref curIndex, ref cp));
+                        attributesTable.Add(AttributeSourceFile.Create(code, ref curIndex, cp));
                         attributeIndex++;
                         break;
 
@@ -82,6 +89,7 @@ namespace Lab1
                         break;
                 }
             }
+            return new Attributes(attributesTable);
         }
     }
 }

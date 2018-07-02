@@ -22,9 +22,9 @@ namespace Lab1.AttributesFolder
         public static AttributeSuper Create(byte[] code, ref int curIndex)
         {
             ushort attributeNameIndex = Helper.ToUShort(code, ref curIndex);
-            curIndex += 2;
+
             uint attributeLength = Helper.ToUInt(code, ref curIndex);
-            curIndex += 4;
+
             return new AttributeSuper(attributeNameIndex, attributeLength);
         }
     }

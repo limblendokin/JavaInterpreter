@@ -8,61 +8,23 @@ namespace Lab1
 {
     class Field
     {
-        private byte[] access_flags;
-        public int AccessFlags
-        {
-            get
-            {
-                return access_flags[0]*0x100+access_flags[1];
-            }
-        }
-        private byte[] name_index;
-        public int NameIndex
-        {
-            get
-            {
-                return name_index[0] * 256 + name_index[1];
-            }
-        }
-        private byte[] descriptor_index;
-        public int DescriptorIndex
-        {
-            get
-            {
-                return descriptor_index[0] * 256 + descriptor_index[1];
-            }
-        }
-        private Object value;
-        public Object Value
-        {
-            get
-            {
-                return value;
-            }
-            set
-            {
-                this.value = value;
-            }
-        }
-        private byte[] attributes_count;
-        public short AttributesCount
-        {
-            get
-            {
-                short output = attributes_count[0];
-                for (int i = 1; i < 2; i++)
-                {
-                    output *= 256;
-                    output += attributes_count[i];
-                }
-                return output;
-            }
-        }
-        private Attributes attributes;
-        private Field()
-        {
+        private uint accessFlags;
+        public uint AccessFlags { get => accessFlags; }
 
-        }
+        private uint nameIndex;
+        public uint NameIndex { get => nameIndex; }
+
+        private uint descriptorIndex;
+        public uint DescriptorIndex { get => descriptorIndex; }
+
+        private Object _value;
+        public Object Value { get => _value; set => _value = value; }
+
+        private ushort attributesCount;
+        public ushort AttributesCount { get => attributesCount; }
+
+        private Attributes attributes;
+        
         /// <summary>
         /// Вызов конструктора считывает данные об определенном поле и его атрибуты
         /// </summary>
@@ -70,22 +32,28 @@ namespace Lab1
         /// <param name="fields_count"></param>
         /// <param name="curIndex"></param>
         /// <param name="cp"></param>
-        public Field(byte[] bytecode, short fields_count, ref int curIndex, ref ConstantPool cp)
+        public Field(ushort accessFlags, ushort nameIndex, ushort descriptorIndex, ushort attributesCount, Attributes attributes)
         {
-            access_flags = readBytes(2, ref curIndex, bytecode);
-            name_index = readBytes(2, ref curIndex, bytecode);
-            descriptor_index = readBytes(2, ref curIndex, bytecode);
-            attributes_count = readBytes(2, ref curIndex, bytecode);
-            attributes = new Attributes(bytecode, AttributesCount, ref curIndex, ref cp);
+            this.accessFlags = accessFlags;
+            this.nameIndex = nameIndex;
+            this.descriptorIndex = descriptorIndex;
+            this.attributesCount = attributesCount;
+            this.attributes = attributes;
         }
-        public byte[] readBytes(uint count, ref int curIndex, byte[] bytecode)
+
+        public static Field Create(byte[] code, ushort fieldsCount, ref int curIndex, ConstantPool cp)
         {
-            byte[] output = new byte[count];
-            for (int i = 0; i < count; i++)
-            {
-                output[i] = bytecode[curIndex++];
-            }
-            return output;
+            ushort accessFlags = Helper.ToUShort(code, ref curIndex);
+
+            ushort nameIndex = Helper.ToUShort(code, ref curIndex);
+
+            ushort descriptorIndex = Helper.ToUShort(code, ref curIndex);
+
+            ushort attributesCount = Helper.ToUShort(code, ref curIndex);
+
+            var attributes = Attributes.Create(code, attributesCount, ref curIndex, cp);
+
+            return new Field(accessFlags, nameIndex, descriptorIndex, attributesCount, attributes); 
         }
     }
 }

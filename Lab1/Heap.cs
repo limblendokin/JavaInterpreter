@@ -83,7 +83,7 @@ namespace Lab1
                 {
                     foreach (Field f in j.Fields)
                     {
-                        if (j.cp.getConstantUtf8(f.NameIndex).Value == fieldName)
+                        if (j.ConstantPool.getConstantUtf8((int)f.NameIndex).Value == fieldName)
                         {
                             field = f;
                             return true;

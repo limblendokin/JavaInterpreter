@@ -9,14 +9,13 @@ namespace Lab1
     class Interfaces
     {
         // TODO: realization
-        private Interfaces()
+        public Interfaces()
         {
 
         }
-        public Interfaces(byte[] bytecode, short interfaces_count, ref int curIndex, ref ConstantPool constant_pool)
+        public static Interfaces Create(byte[] code, ushort interfacesCount, ref int curIndex, ConstantPool constantPool)
         {
-
+            return new Interfaces();
         }
-
     }
 }

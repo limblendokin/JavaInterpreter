@@ -29,7 +29,7 @@ namespace Lab1
         {
             this.heap = h;
             this.currentClass = javaClass;
-            this.cp = javaClass.cp;
+            this.cp = javaClass.ConstantPool;
             opStackPointer = -1;
             this.code = codeAttribute.Code;
             localVarArray = new Object[codeAttribute.MaxLocals];
@@ -1021,7 +1021,7 @@ namespace Lab1
         }
         private List<Object> getArgs(int classIndex, int methodIndex)
         {
-            String methodArgs = cp.getConstantUtf8(heap.loadedClasses.ElementAt(classIndex).Methods.ElementAt(methodIndex).Descriptor_index).Value;
+            String methodArgs = cp.getConstantUtf8(heap.loadedClasses.ElementAt(classIndex).Methods.ElementAt(methodIndex).DescriptorIndex).Value;
             int argsCount = 0;
             for(int i = 1; i < methodArgs.Length; i++)
             {
