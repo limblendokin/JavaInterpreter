@@ -74,46 +74,21 @@ namespace Lab1
         }
         public bool tryFindStaticField(ConstantPool cp, int constantIndex, out Field field)
         {
-            field = null;
             String className = cp.getConstantUtf8(cp.getConstantClass(cp.getConstantFieldRef(constantIndex).ClassIndex).NameIndex).Value;
             String fieldName = cp.getConstantUtf8(cp.getConstantNameAndType(cp.getConstantFieldRef(constantIndex).NameAndTypeIndex).NameIndex).Value;
-            foreach (JavaClass j in loadedClasses)
-            {
-                if (j.ThisClassName == className)
-                {
-                    foreach (Field f in j.Fields)
-                    {
-                        if (j.ConstantPool.getConstantUtf8((int)f.NameIndex).Value == fieldName)
-                        {
-                            field = f;
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
+            field = loadedClasses.First(x => x.ThisClassName == className).Fields.First(x => x.ThisFieldName == fieldName);
+            if (field != null)
+                return true;
+            else
+                return false;
         }
         public int getLoadedClassIndex(String className)
         {
-            for (int i = 0; i<loadedClasses.Count; i++)
-            {
-                if(className == loadedClasses.ElementAt(i).ThisClassName)
-                {
-                    return i;
-                }
-            }
-            return 0;
+            return loadedClasses.FindIndex(x=>x.ThisClassName == className);
         }
         public int getLoadedClassMethodIndex(int classIndex, String methodName)
         {
-            for(int i = 0; i < loadedClasses.ElementAt(classIndex).Methods.Count; i++)
-            {
-                if(loadedClasses.ElementAt(classIndex).Methods.ElementAt(i).ThisMethodName == methodName)
-                {
-                    return i;
-                }
-            }
-            return 0;
+            return loadedClasses.ElementAt(classIndex).Methods.FindIndex(x => x.ThisMethodName == methodName);
         }
         //public ObjectReference addArray() { }
     }

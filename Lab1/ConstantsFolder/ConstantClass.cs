@@ -9,13 +9,8 @@ namespace Lab1.ConstantsFolder
     class ConstantClass : Constant
     {
         private ushort nameIndex;
-        public ushort NameIndex
-        {
-            get
-            {
-                return nameIndex;
-            }
-        }
+        public ushort NameIndex => nameIndex;
+
         public ConstantClass(byte tag, ushort nameIndex) : base(tag)
         {
             this.nameIndex = nameIndex;
