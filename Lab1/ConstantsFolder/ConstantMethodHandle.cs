@@ -6,27 +6,17 @@ using System.Threading.Tasks;
 
 namespace Lab1.ConstantsFolder
 {
-    class ConstantMethodHandle : Constant
+    class ConstantMethodHandle
     {
         private byte referenceKind;
 
         private ushort referenceIndex;
-        public ushort ReferenceIndex { get => referenceIndex; }
+        public ushort ReferenceIndex => referenceIndex;
         
-        public ConstantMethodHandle(byte tag, byte referenceKind, ushort referenceIndex) : base(tag)
+        public ConstantMethodHandle(byte referenceKind, ushort referenceIndex)
         {
             this.referenceKind = referenceKind;
             this.referenceIndex = referenceIndex;
-        }
-        public new static ConstantMethodHandle Create(byte[] code, ref int curIndex)
-        {
-            byte tag = code[curIndex++];
-
-            byte referenceKind = code[curIndex++];
-
-            ushort referenceIndex = Helper.ToUShort(code, ref curIndex);
-
-            return new ConstantMethodHandle(tag, referenceKind, referenceIndex);
         }
     }
 }

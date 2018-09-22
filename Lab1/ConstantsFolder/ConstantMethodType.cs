@@ -6,23 +6,15 @@ using System.Threading.Tasks;
 
 namespace Lab1.ConstantsFolder
 {
-    class ConstantMethodType : Constant
+    class ConstantMethodType
     {
         private ushort descriptorIndex;
-        public ushort DescriptorIndex { get => descriptorIndex; }
+        public ushort DescriptorIndex => descriptorIndex;
         
 
-        public ConstantMethodType(byte tag, ushort descriptorIndex) : base(tag)
+        public ConstantMethodType(ushort descriptorIndex)
         {
             this.descriptorIndex = descriptorIndex;
-        }
-        public new static ConstantMethodType Create(byte[] code, ref int curIndex)
-        {
-            byte tag = code[curIndex++];
-
-            ushort descriptorIndex = Helper.ToUShort(code, ref curIndex);
-
-            return new ConstantMethodType(tag, descriptorIndex);
         }
     }
 }

@@ -6,29 +6,19 @@ using System.Threading.Tasks;
 
 namespace Lab1.ConstantsFolder
 {
-    class ConstantInvokeDynamic : Constant
+    class ConstantInvokeDynamic
     {
         private ushort bootstrapMethodAttrIndex;
-        public ushort BootstrapMethodAttrIndex { get => bootstrapMethodAttrIndex; }
+        public ushort BootstrapMethodAttrIndex => bootstrapMethodAttrIndex;
 
         private ushort nameAndTypeIndex;
-        public ushort NameAndTypeIndex { get => nameAndTypeIndex; }
+        public ushort NameAndTypeIndex => nameAndTypeIndex;
         
 
-        public ConstantInvokeDynamic(byte tag, ushort bootstrapMethodAttrIndex, ushort nameAndTypeIndex) : base(tag)
+        public ConstantInvokeDynamic(ushort bootstrapMethodAttrIndex, ushort nameAndTypeIndex)
         {
             this.bootstrapMethodAttrIndex = bootstrapMethodAttrIndex;
             this.nameAndTypeIndex = nameAndTypeIndex;
-        }
-        public new static ConstantInvokeDynamic Create(byte[] code, ref int curIndex)
-        {
-            byte tag = code[curIndex++];
-
-            ushort bootstrapMethodAttrIndex = Helper.ToUShort(code, ref curIndex);
-
-            ushort nameAndTypeIndex = Helper.ToUShort(code, ref curIndex);
-
-            return new ConstantInvokeDynamic(tag, bootstrapMethodAttrIndex, nameAndTypeIndex);
         }
     }
 }

@@ -6,29 +6,18 @@ using System.Threading.Tasks;
 
 namespace Lab1.ConstantsFolder
 {
-    class ConstantInterfaceMethodRef : Constant
+    class ConstantInterfaceMethodRef
     {
         private ushort classIndex;
-        public ushort ClassIndex { get => classIndex; }
+        public ushort ClassIndex => classIndex;
 
         private ushort nameAndTypeIndex;
-        public ushort NameAndTypeIndex { get => nameAndTypeIndex; }
+        public ushort NameAndTypeIndex => nameAndTypeIndex;
         
-        public ConstantInterfaceMethodRef(byte tag, ushort classIndex, ushort nameAndTypeIndex) : base(tag)
+        public ConstantInterfaceMethodRef(ushort classIndex, ushort nameAndTypeIndex)
         {
             this.classIndex = classIndex;
             this.nameAndTypeIndex = nameAndTypeIndex;
         }
-        public new static ConstantInterfaceMethodRef Create(byte[] code, ref int curIndex)
-        {
-            byte tag = code[curIndex++];
-
-            ushort classIndex= Helper.ToUShort(code, ref curIndex);
-
-            ushort nameAndTypeIndex = Helper.ToUShort(code, ref curIndex);
-
-            return new ConstantInterfaceMethodRef(tag, classIndex, nameAndTypeIndex);
-        }
-        
     }
 }

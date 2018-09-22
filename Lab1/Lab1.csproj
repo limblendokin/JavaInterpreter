@@ -85,7 +85,6 @@
     <Compile Include="ConstantsFolder\ConstantMethodRef.cs" />
     <Compile Include="ConstantsFolder\ConstantFieldRef.cs" />
     <Compile Include="ConstantsFolder\ConstantClass.cs" />
-    <Compile Include="ConstantsFolder\Constant.cs" />
     <Compile Include="DependenciesLoader.cs" />
     <Compile Include="Field.cs" />
     <Compile Include="Frame.cs" />

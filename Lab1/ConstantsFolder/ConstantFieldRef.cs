@@ -6,38 +6,17 @@ using System.Threading.Tasks;
 
 namespace Lab1.ConstantsFolder
 {
-    class ConstantFieldRef : Constant
+    class ConstantFieldRef
     {
         private ushort classIndex;
-        public ushort ClassIndex
-        {
-            get
-            {
-                return classIndex;
-            }
-        }
+        public ushort ClassIndex => classIndex;
         private ushort nameAndTypeIndex;
-        public ushort NameAndTypeIndex
-        {
-            get
-            {
-                return nameAndTypeIndex;
-            }
-        }
-        public ConstantFieldRef(byte tag, ushort classIndex, ushort nameAndTypeIndex) : base(tag)
+        public ushort NameAndTypeIndex => nameAndTypeIndex;
+
+        public ConstantFieldRef(ushort classIndex, ushort nameAndTypeIndex)
         {
             this.classIndex = classIndex;
             this.nameAndTypeIndex = nameAndTypeIndex;
-        }
-        public new static ConstantFieldRef Create(byte[] code, ref int curIndex)
-        {
-            byte tag = code[curIndex++];
-
-            ushort classIndex = Helper.ToUShort(code, ref curIndex);
-
-            ushort nameAndTypeIndex = Helper.ToUShort(code, ref curIndex);
-
-            return new ConstantFieldRef(tag, classIndex, nameAndTypeIndex);
         }
     }
 }

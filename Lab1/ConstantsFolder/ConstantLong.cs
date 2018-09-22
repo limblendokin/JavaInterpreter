@@ -6,23 +6,14 @@ using System.Threading.Tasks;
 
 namespace Lab1.ConstantsFolder
 {
-    class ConstantLong : Constant
+    class ConstantLong
     {
         private long value;
-        public long Value { get => value; }
+        public long Value => value;
 
-        public ConstantLong(byte tag, long value) : base(tag)
+        public ConstantLong(long value)
         {
             this.value = value;
-        }
-        public new static ConstantLong Create(byte[]code, ref int curIndex)
-        {
-            byte tag = code[curIndex++];
-
-            long value = BitConverter.ToInt64(code, curIndex);
-            curIndex += 8;
-
-            return new ConstantLong(tag, value);
         } 
     }
 }

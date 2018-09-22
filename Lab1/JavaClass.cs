@@ -10,6 +10,8 @@ namespace Lab1
 {
     class JavaClass
     {
+        private byte[] array;
+        private int index;
         private uint magic;
         private ushort minorVersion;
         private ushort majorVersion;
@@ -67,24 +69,24 @@ namespace Lab1
         {
             int curIndex = 0;
             // ca fe ba be
-            uint magic = Helper.ToUInt(bytecode, ref curIndex);
+            uint magic = ReadUInt();
 
             // Версии 
-            ushort minorVersion = Helper.ToUShort(bytecode, ref curIndex);
-            ushort majorVersion = Helper.ToUShort(bytecode, ref curIndex);
-            ushort constantPoolCount = Helper.ToUShort(bytecode, ref curIndex);
+            ushort minorVersion = ReadUShort();
+            ushort majorVersion = ReadUShort();
+            ushort constantPoolCount = ReadUShort();
 
             var constantPool = ReadConstantPool(bytecode, constantPoolCount, ref curIndex);
 
-            ushort accessFlags = Helper.ToUShort(bytecode, ref curIndex);
+            ushort accessFlags = ReadUShort();
             // Индекс констанnы class текущего класса в пуле констант
-            ushort thisClass = Helper.ToUShort(bytecode, ref curIndex);
-            ushort superClass = Helper.ToUShort(bytecode, ref curIndex);
-            ushort interfacesCount = Helper.ToUShort(bytecode, ref curIndex);
+            ushort thisClass = ReadUShort();
+            ushort superClass = ReadUShort();
+            ushort interfacesCount = ReadUShort();
 
             var interfaces = ReadInterfaces(bytecode, interfacesCount, ref curIndex, constantPool);
 
-            ushort fieldsCount = Helper.ToUShort(bytecode, ref curIndex);
+            ushort fieldsCount = ReadUShort();
             var fields = new List<Field>();
 
             for (int i = 0; i < fieldsCount; i++)
@@ -92,7 +94,7 @@ namespace Lab1
                 fields.Add(ReadField(bytecode, fieldsCount, ref curIndex, constantPool));
             }
 
-            ushort methodsCount = Helper.ToUShort(bytecode, ref curIndex);
+            ushort methodsCount = ReadUShort();
             var methods = new List<Method>();
 
             for (short i = 0; i < methodsCount; i++)
@@ -100,7 +102,7 @@ namespace Lab1
                 methods.Add(ReadMethod(bytecode, methodsCount, ref curIndex, constantPool));
             }
 
-            ushort attributesCount = Helper.ToUShort(bytecode, ref curIndex);
+            ushort attributesCount = ReadUShort();
 
             var attributes = ReadAttributes(bytecode, attributesCount, ref curIndex, constantPool);
 
@@ -108,8 +110,89 @@ namespace Lab1
 
             
         }
-        private static ConstantPool ReadConstantPool(byte[] code, ushort constantPoolCount, ref int curIndex)
+        private uint ReadUInt()
         {
+            uint output;
+            if (BitConverter.IsLittleEndian)
+                output = BitConverter.ToUInt32(array.Skip(index).Take(4).Reverse().ToArray(), 0);
+            else
+                output = BitConverter.ToUInt32(array, index);
+            index += 4;
+            return output;
+        }
+        private ushort ReadUShort()
+        {
+            ushort output;
+            if (BitConverter.IsLittleEndian)
+                output = BitConverter.ToUInt16(array.Skip(index).Take(2).Reverse().ToArray(), 0);
+            else
+                output = BitConverter.ToUInt16(array, index);
+            index += 2;
+            return output;
+        }
+        private long ReadLong()
+        {
+            long output;
+            if (BitConverter.IsLittleEndian)
+                output = BitConverter.ToInt64(array.Skip(index).Take(8).Reverse().ToArray(), 0);
+            else
+                output = BitConverter.ToInt64(array, index);
+            index += 8;
+            return output;
+        }
+        private double ReadDouble()
+        {
+            double output;
+            if (BitConverter.IsLittleEndian)
+                output = BitConverter.ToDouble(array.Skip(index).Take(8).Reverse().ToArray(), 0);
+            else
+                output = BitConverter.ToDouble(array, index);
+            index += 8;
+            return output;
+        }
+        private int ReadInt()
+        {
+            int output;
+            if (BitConverter.IsLittleEndian)
+                output = BitConverter.ToInt32(array.Skip(index).Take(4).Reverse().ToArray(), 0);
+            else
+                output = BitConverter.ToInt32(array, index);
+            index += 4;
+            return output;
+        }
+        private float ReadFloat()
+        {
+            float output;
+            if (BitConverter.IsLittleEndian)
+                output = BitConverter.ToSingle(array.Skip(index).Take(4).Reverse().ToArray(), 0);
+            else
+                output = BitConverter.ToSingle(array, index);
+            index += 4;
+            return output;
+        }
+        private byte ReadByte()
+        {
+            return array[index++];
+        }
+        private ConstantPool ReadConstantPool(byte[] code, ushort constantPoolCount, ref int curIndex)
+        {
+            var dict = new Dictionary<int, Action>();
+            dict.Add(1, () => );
+            dict.Add( 3, () => new ConstantInteger(ReadInt()));
+            dict.Add( 4, () => new ConstantFloat(ReadFloat()));
+            dict.Add( 5, () => new ConstantLong(ReadLong()));
+            dict.Add( 6, () => new ConstantDouble(ReadDouble()));
+            dict.Add( 7, () => new ConstantClass(ReadUShort()));
+            dict.Add( 8, () => new ConstantString(ReadUShort()));
+            dict.Add( 9, () => new ConstantFieldRef(ReadUShort(), ReadUShort()));
+            dict.Add(10, () => new ConstantMethodRef(ReadUShort(), ReadUShort()));
+            dict.Add(11, () => new ConstantInterfaceMethodRef(ReadUShort(), ReadUShort());
+            dict.Add(12, () => new ConstantNameAndType(ReadUShort(), ReadUShort()));
+            dict.Add(15, () => new ConstantMethodHandle(ReadByte(), ReadUShort()));
+            dict.Add(16, () => new ConstantMethodType(ReadUShort()));
+            dict.Add(18, () => new ConstantInvokeDynamic(ReadUShort(), ReadUShort()));
+            dict.Add(19, () => new ConstantModule(ReadUShort()));
+            dict.Add(20, () => new ConstantPackage(ReadUShort()));
             int constIndex = 0;
             var cp = new List<Constant>();
             cp.Add(null);
@@ -222,19 +305,19 @@ namespace Lab1
             }
             return new ConstantPool(cp, constantClasses);
         }
-        private static Interfaces ReadInterfaces(byte[] code, ushort interfacesCount, ref int curIndex, ConstantPool constantPool)
+        private Interfaces ReadInterfaces(byte[] code, ushort interfacesCount, ref int curIndex, ConstantPool constantPool)
         {
             return new Interfaces();
         }
-        private static Field ReadField(byte[] code, ushort fieldsCount, ref int curIndex, ConstantPool cp)
+        private Field ReadField(byte[] code, ushort fieldsCount, ref int curIndex, ConstantPool cp)
         {
-            ushort accessFlags = Helper.ToUShort(code, ref curIndex);
+            ushort accessFlags = ReadUShort();
 
-            ushort nameIndex = Helper.ToUShort(code, ref curIndex);
+            ushort nameIndex = ReadUShort();
 
-            ushort descriptorIndex = Helper.ToUShort(code, ref curIndex);
+            ushort descriptorIndex = ReadUShort();
 
-            ushort attributesCount = Helper.ToUShort(code, ref curIndex);
+            ushort attributesCount = ReadUShort();
 
             var attributes = ReadAttributes(code, attributesCount, ref curIndex, cp);
 
@@ -243,15 +326,15 @@ namespace Lab1
             return new Field(accessFlags, nameIndex, descriptorIndex, attributesCount, attributes, thisFieldName);
         }
         // methodCount var not needed
-        private static Method ReadMethod(byte[] code, ushort methodsCount, ref int curIndex, ConstantPool cp)
+        private Method ReadMethod(byte[] code, ushort methodsCount, ref int curIndex, ConstantPool cp)
         {
-            ushort accessFlags = Helper.ToUShort(code, ref curIndex);
+            ushort accessFlags = ReadUShort();
 
-            ushort nameIndex = Helper.ToUShort(code, ref curIndex);
+            ushort nameIndex = ReadUShort();
 
-            ushort descriptorIndex = Helper.ToUShort(code, ref curIndex);
+            ushort descriptorIndex = ReadUShort();
 
-            ushort attributesCount = Helper.ToUShort(code, ref curIndex);
+            ushort attributesCount = ReadUShort();
 
             var attributes = ReadAttributes(code, attributesCount, ref curIndex, cp);
 
@@ -259,7 +342,7 @@ namespace Lab1
 
             return new Method(accessFlags, nameIndex, descriptorIndex, attributesCount, attributes, thisMethodName);
         }
-        private static Attributes ReadAttributes(byte[] code, ushort attributesCount, ref int curIndex, ConstantPool cp)
+        private Attributes ReadAttributes(byte[] code, ushort attributesCount, ref int curIndex, ConstantPool cp)
         {
             /*List<AttributeSuper> attributesTable = new List<AttributeSuper>();
             var dict = new Dictionary<String, Action>();

@@ -6,22 +6,14 @@ using System.Threading.Tasks;
 
 namespace Lab1.ConstantsFolder
 {
-    class ConstantClass : Constant
+    class ConstantClass
     {
         private ushort nameIndex;
         public ushort NameIndex => nameIndex;
-
-        public ConstantClass(byte tag, ushort nameIndex) : base(tag)
+        
+        public ConstantClass(ushort nameIndex)
         {
             this.nameIndex = nameIndex;
-        }
-        public new static ConstantClass Create(byte[] code, ref int curIndex)
-        {
-            byte tag = code[curIndex++];
-
-            ushort nameIndex = Helper.ToUShort(code, ref curIndex);
-
-            return new ConstantClass(tag, nameIndex);
         }
     }
 }
