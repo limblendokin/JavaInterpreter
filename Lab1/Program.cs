@@ -22,7 +22,10 @@ namespace Lab1
                 className = "AdditionWithFunction";
                 Console.Write(className);
             }
-            Machine m = new Machine(className);
+            String directory = @"C:\Documents\Study\LaPP";
+            ClassLoader classLoader = new ClassLoader(directory, className);
+            
+            Machine m = new Machine(classLoader.LoadClasses());
             exitCode = m.run();
             Console.WriteLine("Program ended with code " + exitCode);
             Console.ReadKey();

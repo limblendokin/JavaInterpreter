@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace Lab1
 {
-    class Interfaces
+    class DependenciesLoader
     {
-        // TODO: realization
-        public Interfaces()
+        public Dictionary<int, JavaClass> GetDependencies(JavaClass javaClass)
         {
-
+            javaClass.ConstantPool.
         }
     }
 }

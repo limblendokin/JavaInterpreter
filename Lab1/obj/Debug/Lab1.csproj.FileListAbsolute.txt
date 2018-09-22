@@ -7,3 +7,10 @@ D:\Documents\Visual Studio 2017\Projects\LaPP\Lab1\Lab1\obj\Debug\Lab1.csprojAss
 D:\Documents\Visual Studio 2017\Projects\LaPP\Lab1\Lab1\obj\Debug\Lab1.csproj.CoreCompileInputs.cache
 D:\Documents\Visual Studio 2017\Projects\LaPP\Lab1\Lab1\bin\Debug\Lab1.exe.CodeAnalysisLog.xml
 D:\Documents\Visual Studio 2017\Projects\LaPP\Lab1\Lab1\bin\Debug\Lab1.exe.lastcodeanalysissucceeded
+C:\Documents\Visual Studio 2017\Repos\JavaInterpreter\Lab1\bin\Debug\Lab1.exe.config
+C:\Documents\Visual Studio 2017\Repos\JavaInterpreter\Lab1\bin\Debug\Lab1.exe
+C:\Documents\Visual Studio 2017\Repos\JavaInterpreter\Lab1\bin\Debug\Lab1.pdb
+C:\Documents\Visual Studio 2017\Repos\JavaInterpreter\Lab1\obj\Debug\Lab1.csprojAssemblyReference.cache
+C:\Documents\Visual Studio 2017\Repos\JavaInterpreter\Lab1\obj\Debug\Lab1.csproj.CoreCompileInputs.cache
+C:\Documents\Visual Studio 2017\Repos\JavaInterpreter\Lab1\obj\Debug\Lab1.exe
+C:\Documents\Visual Studio 2017\Repos\JavaInterpreter\Lab1\obj\Debug\Lab1.pdb

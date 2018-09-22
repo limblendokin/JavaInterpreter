@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab1", "Lab1\Lab1.csproj", "{A26D7282-4584-4401-B311-EDBAF329C5CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground", "Playground\Playground.csproj", "{2ADD24CA-C01C-495E-BC81-672310445A6C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground", "Playground\Playground.csproj", "{53756B12-BE53-4316-BA60-CA7072134DC8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,12 +17,15 @@ Global
 		{A26D7282-4584-4401-B311-EDBAF329C5CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A26D7282-4584-4401-B311-EDBAF329C5CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A26D7282-4584-4401-B311-EDBAF329C5CA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2ADD24CA-C01C-495E-BC81-672310445A6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2ADD24CA-C01C-495E-BC81-672310445A6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2ADD24CA-C01C-495E-BC81-672310445A6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2ADD24CA-C01C-495E-BC81-672310445A6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53756B12-BE53-4316-BA60-CA7072134DC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53756B12-BE53-4316-BA60-CA7072134DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53756B12-BE53-4316-BA60-CA7072134DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53756B12-BE53-4316-BA60-CA7072134DC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {44C88FBF-6164-4762-94D4-8D6C7AAEF118}
 	EndGlobalSection
 EndGlobal

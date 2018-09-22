@@ -14,26 +14,19 @@ namespace Lab1
         private uint pc;
         Heap heap;
         private Object[] localVarArray;
-        private Object[] opStack;
-        private int opStackPointer;
         private ConstantPool cp;
         private byte[] code;
         private Message msg;
         public Object pushedValue;
         JavaClass currentClass;
-        private Frame()
-        {
-
-        }
         public Frame(JavaClass javaClass, Heap h, AttributeCode codeAttribute)
         {
             this.heap = h;
             this.currentClass = javaClass;
             this.cp = javaClass.ConstantPool;
-            opStackPointer = -1;
             this.code = codeAttribute.Code;
             localVarArray = new Object[codeAttribute.MaxLocals];
-            opStack = new Object[codeAttribute.MaxStack];
+            OperandStack variableStack = new OperandStack(codeAttribute.MaxStack);
         }
         public void pushArgs(Object value)
         {
@@ -69,14 +62,6 @@ namespace Lab1
         private Object getLocalVar(int index)
         {
             return localVarArray[index];
-        }
-        private void push(Object value)
-        {
-            opStack[++opStackPointer] = value;
-        }
-        private Object pop()
-        {
-            return opStack[opStackPointer--];
         }
         private Object getOperand(int length)
         {

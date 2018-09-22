@@ -17,64 +17,12 @@ namespace Lab1
 
         List<JavaClass> loadedClasses;
         JavaClass currentClass;
-
-        private Machine()
-        {
-
-        }
-        public Machine(String className)
+        
+        public Machine(List<JavaClass> loadedClasses)
         {
             // Считывание классов, встречающихся в пуле констант исходного *.class файла 
-            loadedClasses = new List<JavaClass>();
-            // 
-            loadClasses(className);
+            this.loadedClasses = loadedClasses;
             frames = new List<Frame>();
-        }
-        public void loadClasses(String className)
-        {
-            byte[] bytecode;
-            String cpClassName;
-            List<ConstantClass> ccl = new List<ConstantClass>();
-            bool isClassAlreadyLoaded = true;
-            JavaClass currentLoadedClass;
-            if (tryGetBytecode(className, out bytecode))
-            {
-                loadedClasses.Add(JavaClass.Create(bytecode));
-            }
-            for (int j = 0; j < loadedClasses.Count; j++)
-            {
-                currentLoadedClass = loadedClasses.ElementAt(j);
-                for (int i = 0; i < currentLoadedClass.ConstantPool.GetConstantClasses().Count; i++)
-                {
-                    ccl = currentLoadedClass.ConstantPool.GetConstantClasses();
-                    cpClassName = currentLoadedClass.ConstantPool.getConstantUtf8(currentLoadedClass.ConstantPool.GetConstantClasses().ElementAt(i).NameIndex).Value;
-                    if (cpClassName != "java/lang/Object" && cpClassName != "java/lang/System")
-                    {
-                        isClassAlreadyLoaded = false;
-                        for (int k= 0; k < loadedClasses.Count; k++)
-                        {
-                            if (loadedClasses.ElementAt(k).ThisClassName == cpClassName)
-                            {
-                                isClassAlreadyLoaded = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (!isClassAlreadyLoaded)
-                    {
-                        if (tryGetBytecode(cpClassName, out bytecode))
-                        {
-                            loadedClasses.Add(JavaClass.Create(bytecode));
-                            Console.WriteLine("Class " + cpClassName + " loaded");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Class " + cpClassName + " not found");
-                        }
-                    }
-                    
-                }
-            }
         }
         public uint run()
         {
@@ -82,7 +30,7 @@ namespace Lab1
             AttributeCode codeAttribute;
             int frameStackPointer = frames.Count - 1;
             Message msg;
-            // run <clinit> for all loaded classes
+            // TODO: run <clinit> for all loaded classes
             currentClass = loadedClasses.First();
             
             if (currentClass.Methods.First(m => m.ThisMethodName == "main").TryGetCodeAttribute(out codeAttribute))
@@ -115,22 +63,6 @@ namespace Lab1
             }
 
             return 0;
-        }
-        
-
-        private bool tryGetBytecode(String className, out byte[] bytecode)
-        {
-            String path = @"D:\Documents\Study\ЯиПП\" + className + ".class";
-            if (File.Exists(path))
-            {
-                bytecode = File.ReadAllBytes(path);
-                return true;
-            }
-            else
-            {
-                bytecode = null;
-                return false;
-            }
         }
     }
 }

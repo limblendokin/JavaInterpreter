@@ -43,22 +43,5 @@ namespace Lab1
             this.attributes = attributes;
             this.thisFieldName = thisFieldName;
         }
-
-        public static Field Create(byte[] code, ushort fieldsCount, ref int curIndex, ConstantPool cp)
-        {
-            ushort accessFlags = Helper.ToUShort(code, ref curIndex);
-
-            ushort nameIndex = Helper.ToUShort(code, ref curIndex);
-
-            ushort descriptorIndex = Helper.ToUShort(code, ref curIndex);
-
-            ushort attributesCount = Helper.ToUShort(code, ref curIndex);
-
-            var attributes = Attributes.Create(code, attributesCount, ref curIndex, cp);
-
-            String thisFieldName = cp.getConstantUtf8(nameIndex).Value;
-
-            return new Field(accessFlags, nameIndex, descriptorIndex, attributesCount, attributes, thisFieldName); 
-        }
     }
 }

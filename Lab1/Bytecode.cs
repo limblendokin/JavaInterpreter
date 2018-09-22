@@ -6,12 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab1
 {
-    class Interfaces
+    class Bytecode
     {
-        // TODO: realization
-        public Interfaces()
-        {
-
-        }
     }
 }
