@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Lab1.ConstantsFolder;
+using JavaInterpreter.ConstantsFolder;
 
-namespace Lab1
+namespace JavaInterpreter
 {
     class ClassLoader
     {

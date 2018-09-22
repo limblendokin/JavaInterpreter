@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Lab1.ConstantsFolder;
-using Lab1.AttributesFolder;
+using JavaInterpreter.ConstantsFolder;
+using JavaInterpreter.AttributesFolder;
 using System.IO;
 
-namespace Lab1
+namespace JavaInterpreter
 {
     class Machine
     {

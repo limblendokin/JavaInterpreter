@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Lab1.ConstantsFolder;
+using JavaInterpreter.ConstantsFolder;
 
-namespace Lab1
+namespace JavaInterpreter
 {
     class ConstantPool
     {
@@ -124,66 +124,82 @@ namespace Lab1
         public void AddConstantClass(ConstantClass constantClass)
         {
             constantClasses.Add(constantClass);
+            router.Add(counter++, constantClasses.Count);
         }
-        public ConstantDouble getConstantDouble(int index)
+        public void AddConstantDouble(ConstantDouble constantDouble)
         {
-            return constantDoubles.ElementAt(FindIndexInCollection(index));
+            constantDoubles.Add(constantDouble);
+            router.Add(counter++, constantDoubles.Count);
         }
-        public ConstantFieldRef getConstantFieldRef(int index)
+        public void AddConstantFieldRef(ConstantFieldRef constantFieldRef)
         {
-            return constantFieldRefs.ElementAt(FindIndexInCollection(index));
+            constantFieldRefs.Add(constantFieldRef);
+            router.Add(counter++, constantFieldRefs.Count);
         }
-        public ConstantFloat getConstantFloat(int index)
+        public void AddConstantFloat(ConstantFloat constantFloat)
         {
-            return constantFloats.ElementAt(FindIndexInCollection(index));
+            constantFloats.Add(constantFloat);
+            router.Add(counter++, constantFloats.Count);
         }
-        public ConstantInteger getConstantInteger(int index)
+        public void AddConstantInteger(ConstantInteger constantInteger)
         {
-            return constantIntegers.ElementAt(FindIndexInCollection(index));
+            constantIntegers.Add(constantInteger);
+            router.Add(counter++, constantIntegers.Count);
         }
-        public ConstantInterfaceMethodRef getConstantInterfaceMethodRef(int index)
+        public void AddConstantInterfaceMethodRef(ConstantInterfaceMethodRef constantInterfaceMethodRef)
         {
-            return constantInterfaceMethodRefs.ElementAt(FindIndexInCollection(index));
+            constantInterfaceMethodRefs.Add(constantInterfaceMethodRef);
+            router.Add(counter++, constantInterfaceMethodRefs.Count);
         }
-        public ConstantInvokeDynamic getConstantInvokeDynamic(int index)
+        public void AddConstantInvokeDynamic(ConstantInvokeDynamic constantInvokeDynamic)
         {
-            return constantInvokeDynamics.ElementAt(FindIndexInCollection(index));
+            constantInvokeDynamics.Add(constantInvokeDynamic);
+            router.Add(counter++, constantInvokeDynamics.Count);
         }
-        public ConstantLong getConstantLong(int index)
+        public void AddConstantLong(ConstantLong  constantLong)
         {
-            return constantLongs.ElementAt(FindIndexInCollection(index));
+            constantLongs.Add(constantLong);
+            router.Add(counter++, constantLongs.Count);
         }
-        public ConstantMethodHandle getConstantMethodHandle(int index)
+        public void AddConstantMethodHandle(ConstantMethodHandle constantMethodHandle)
         {
-            return constantMethodHandles.ElementAt(FindIndexInCollection(index));
+            constantMethodHandles.Add(constantMethodHandle);
+            router.Add(counter++, constantMethodHandles.Count);
         }
-        public ConstantMethodRef getConstantMethodRef(int index)
+        public void AddConstantMethodRef(ConstantMethodRef constantMethodRef)
         {
-            return constantMethodRefs.ElementAt(FindIndexInCollection(index));
+            constantMethodRefs.Add(constantMethodRef);
+            router.Add(counter++, constantMethodRefs.Count);
         }
-        public ConstantMethodType getConstantMethodType(int index)
+        public void AddConstantMethodType(ConstantMethodType constantMethodType)
         {
-            return constantMethodTypes.ElementAt(FindIndexInCollection(index));
+            constantMethodTypes.Add(constantMethodType);
+            router.Add(counter++, constantMethodTypes.Count);
         }
-        public ConstantModule getConstantModule(int index)
+        public void AddConstantModule(ConstantModule constantModule)
         {
-            return constantModules.ElementAt(FindIndexInCollection(index));
+            constantModules.Add(constantModule);
+            router.Add(counter++, constantModules.Count);
         }
-        public ConstantNameAndType getConstantNameAndType(int index)
+        public void AddConstantNameAndType(ConstantNameAndType constantNameAndType)
         {
-            return constantNameAndTypes.ElementAt(FindIndexInCollection(index));
+            constantNameAndTypes.Add(constantNameAndType);
+            router.Add(counter++, constantNameAndTypes.Count);
         }
-        public ConstantPackage getConstantPackage(int index)
+        public void AddConstantPackage(ConstantPackage constantPackage)
         {
-            return constantPackages.ElementAt(FindIndexInCollection(index));
+            constantPackages.Add(constantPackage);
+            router.Add(counter++, constantPackages.Count);
         }
-        public ConstantString getConstantString(int index)
+        public void AddConstantString(ConstantString constantString)
         {
-            return constantStrings.ElementAt(FindIndexInCollection(index));
+            constantStrings.Add(constantString);
+            router.Add(counter++, constantStrings.Count);
         }
-        public ConstantUtf8 getConstantUtf8(int index)
+        public void AddConstantUtf8(ConstantUtf8 constantUtf8)
         {
-            return constantUtf8s.ElementAt(FindIndexInCollection(index));
+            constantUtf8s.Add(constantUtf8);
+            router.Add(counter++, constantUtf8s.Count);
         }
         /// <summary>
         /// Вызов конструктора формирует пул констант данного *.class файла
@@ -211,10 +227,6 @@ namespace Lab1
             constantPackages = new List<ConstantPackage>();
             constantStrings = new List<ConstantString>();
             constantUtf8s = new List<ConstantUtf8>();
-        }
-        public void AddConstant()
-        {
-
         }
     }
 }

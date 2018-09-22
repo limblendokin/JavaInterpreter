@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Lab1
+namespace JavaInterpreter
 {
     class Message
     {

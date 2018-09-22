@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab1", "Lab1\Lab1.csproj", "{A26D7282-4584-4401-B311-EDBAF329C5CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaInterpreter", "Lab1\JavaInterpreter.csproj", "{A26D7282-4584-4401-B311-EDBAF329C5CA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground", "Playground\Playground.csproj", "{53756B12-BE53-4316-BA60-CA7072134DC8}"
 EndProject
