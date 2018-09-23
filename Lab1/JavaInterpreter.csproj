@@ -77,10 +77,6 @@
     <Compile Include="ConstantsFolder\ConstantMethodHandle.cs" />
     <Compile Include="ConstantsFolder\ConstantUtf8.cs" />
     <Compile Include="ConstantsFolder\ConstantNameAndType.cs" />
-    <Compile Include="ConstantsFolder\ConstantDouble.cs" />
-    <Compile Include="ConstantsFolder\ConstantLong.cs" />
-    <Compile Include="ConstantsFolder\ConstantFloat.cs" />
-    <Compile Include="ConstantsFolder\ConstantInteger.cs" />
     <Compile Include="ConstantsFolder\ConstantString.cs" />
     <Compile Include="ConstantsFolder\ConstantMethodRef.cs" />
     <Compile Include="ConstantsFolder\ConstantFieldRef.cs" />

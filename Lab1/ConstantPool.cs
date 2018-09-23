@@ -29,13 +29,13 @@ namespace JavaInterpreter
             Package = 20
         };
         private List<ConstantClass> constantClasses;
-        private List<ConstantDouble> constantDoubles;
+        private List<Double> constantDoubles;
         private List<ConstantFieldRef> constantFieldRefs;
-        private List<ConstantFloat> constantFloats;
-        private List<ConstantInteger> constantIntegers;
+        private List<float> constantFloats;
+        private List<int> constantIntegers;
         private List<ConstantInterfaceMethodRef> constantInterfaceMethodRefs;
         private List<ConstantInvokeDynamic> constantInvokeDynamics;
-        private List<ConstantLong> constantLongs;
+        private List<long> constantLongs;
         private List<ConstantMethodHandle> constantMethodHandles;
         private List<ConstantMethodRef> constantMethodRefs;
         private List<ConstantMethodType> constantMethodTypes;
@@ -61,7 +61,7 @@ namespace JavaInterpreter
         {
             return constantClasses.ElementAt(FindIndexInCollection(index));
         }
-        public ConstantDouble getConstantDouble(int index)
+        public double getConstantDouble(int index)
         {
             return constantDoubles.ElementAt(FindIndexInCollection(index));
         }
@@ -69,11 +69,11 @@ namespace JavaInterpreter
         {
             return constantFieldRefs.ElementAt(FindIndexInCollection(index));
         }
-        public ConstantFloat getConstantFloat(int index)
+        public float getConstantFloat(int index)
         {
             return constantFloats.ElementAt(FindIndexInCollection(index));
         }
-        public ConstantInteger getConstantInteger(int index)
+        public int getConstantInteger(int index)
         {
             return constantIntegers.ElementAt(FindIndexInCollection(index));
         }
@@ -85,7 +85,7 @@ namespace JavaInterpreter
         {
             return constantInvokeDynamics.ElementAt(FindIndexInCollection(index));
         }
-        public ConstantLong getConstantLong(int index)
+        public long getConstantLong(int index)
         {
             return constantLongs.ElementAt(FindIndexInCollection(index));
         }
@@ -126,7 +126,7 @@ namespace JavaInterpreter
             constantClasses.Add(constantClass);
             router.Add(counter++, constantClasses.Count);
         }
-        public void AddConstantDouble(ConstantDouble constantDouble)
+        public void AddConstantDouble(Double constantDouble)
         {
             constantDoubles.Add(constantDouble);
             router.Add(counter++, constantDoubles.Count);
@@ -136,12 +136,12 @@ namespace JavaInterpreter
             constantFieldRefs.Add(constantFieldRef);
             router.Add(counter++, constantFieldRefs.Count);
         }
-        public void AddConstantFloat(ConstantFloat constantFloat)
+        public void AddConstantFloat(float constantFloat)
         {
             constantFloats.Add(constantFloat);
             router.Add(counter++, constantFloats.Count);
         }
-        public void AddConstantInteger(ConstantInteger constantInteger)
+        public void AddConstantInteger(int constantInteger)
         {
             constantIntegers.Add(constantInteger);
             router.Add(counter++, constantIntegers.Count);
@@ -156,7 +156,7 @@ namespace JavaInterpreter
             constantInvokeDynamics.Add(constantInvokeDynamic);
             router.Add(counter++, constantInvokeDynamics.Count);
         }
-        public void AddConstantLong(ConstantLong  constantLong)
+        public void AddConstantLong(long constantLong)
         {
             constantLongs.Add(constantLong);
             router.Add(counter++, constantLongs.Count);
@@ -212,13 +212,13 @@ namespace JavaInterpreter
             counter = 1;
             router = new Dictionary<int, int>();
             constantClasses = new List<ConstantClass>();
-            constantDoubles = new List<ConstantDouble>();
+            constantDoubles = new List<double>();
             constantFieldRefs = new List<ConstantFieldRef>();
-            constantFloats = new List<ConstantFloat>();
-            constantIntegers = new List<ConstantInteger>();
+            constantFloats = new List<float>();
+            constantIntegers = new List<int>();
             constantInterfaceMethodRefs = new List<ConstantInterfaceMethodRef>();
             constantInvokeDynamics = new List<ConstantInvokeDynamic>();
-            constantLongs = new List<ConstantLong>();
+            constantLongs = new List<long>();
             constantMethodHandles = new List<ConstantMethodHandle>();
             constantMethodRefs = new List<ConstantMethodRef>();
             constantMethodTypes = new List<ConstantMethodType>();
