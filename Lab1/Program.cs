@@ -23,9 +23,9 @@ namespace JavaInterpreter
                 Console.Write(className);
             }
             String directory = @"C:\Documents\Study\LaPP";
-            ClassLoader classLoader = new ClassLoader(directory, className);
+            ClassLoader classLoader = new ClassLoader(directory);
             
-            Machine m = new Machine(classLoader.LoadClasses());
+            Machine m = new Machine();
             exitCode = m.run();
             Console.WriteLine("Program ended with code " + exitCode);
             Console.ReadKey();

@@ -9,25 +9,7 @@ namespace JavaInterpreter
 {
     class ConstantPool
     {
-        public enum ConstantType
-        {
-            Utf8 = 1,
-            Integer = 3,
-            Float = 4,
-            Long = 5,
-            Double = 6,
-            Class = 7,
-            String = 8,
-            FieldRef = 9,
-            MethodRef = 10,
-            InterfaceMethodRef = 11,
-            NameAndType = 12,
-            MethodHandle = 15,
-            MethodType = 16,
-            InvokeDynamic = 18,
-            Module = 19,
-            Package = 20
-        };
+        
         private List<ConstantClass> constantClasses;
         private List<Double> constantDoubles;
         private List<ConstantFieldRef> constantFieldRefs;
@@ -46,15 +28,11 @@ namespace JavaInterpreter
         private List<ConstantUtf8> constantUtf8s;
 
         int counter;
-        private Dictionary<int, int> router;
-        // getting constants
+        private List<int> router;
+        // Route common index with index of each collection
         private int FindIndexInCollection(int index)
         {
-            int indexInCollection;
-            if (router.TryGetValue(index, out indexInCollection))
-                return indexInCollection;
-            else
-                throw new KeyNotFoundException();
+            return router.ElementAt(index);
         }
 
         public ConstantClass getConstantClass(int index)
@@ -124,82 +102,82 @@ namespace JavaInterpreter
         public void AddConstantClass(ConstantClass constantClass)
         {
             constantClasses.Add(constantClass);
-            router.Add(counter++, constantClasses.Count);
+            router.Add(constantClasses.Count-1);
         }
         public void AddConstantDouble(Double constantDouble)
         {
             constantDoubles.Add(constantDouble);
-            router.Add(counter++, constantDoubles.Count);
+            router.Add(constantDoubles.Count-1);
         }
         public void AddConstantFieldRef(ConstantFieldRef constantFieldRef)
         {
             constantFieldRefs.Add(constantFieldRef);
-            router.Add(counter++, constantFieldRefs.Count);
+            router.Add(constantFieldRefs.Count-1);
         }
         public void AddConstantFloat(float constantFloat)
         {
             constantFloats.Add(constantFloat);
-            router.Add(counter++, constantFloats.Count);
+            router.Add(constantFloats.Count-1);
         }
         public void AddConstantInteger(int constantInteger)
         {
             constantIntegers.Add(constantInteger);
-            router.Add(counter++, constantIntegers.Count);
+            router.Add(constantIntegers.Count-1);
         }
         public void AddConstantInterfaceMethodRef(ConstantInterfaceMethodRef constantInterfaceMethodRef)
         {
             constantInterfaceMethodRefs.Add(constantInterfaceMethodRef);
-            router.Add(counter++, constantInterfaceMethodRefs.Count);
+            router.Add(constantInterfaceMethodRefs.Count-1);
         }
         public void AddConstantInvokeDynamic(ConstantInvokeDynamic constantInvokeDynamic)
         {
             constantInvokeDynamics.Add(constantInvokeDynamic);
-            router.Add(counter++, constantInvokeDynamics.Count);
+            router.Add(constantInvokeDynamics.Count-1);
         }
         public void AddConstantLong(long constantLong)
         {
             constantLongs.Add(constantLong);
-            router.Add(counter++, constantLongs.Count);
+            router.Add(constantLongs.Count-1);
         }
         public void AddConstantMethodHandle(ConstantMethodHandle constantMethodHandle)
         {
             constantMethodHandles.Add(constantMethodHandle);
-            router.Add(counter++, constantMethodHandles.Count);
+            router.Add(constantMethodHandles.Count-1);
         }
         public void AddConstantMethodRef(ConstantMethodRef constantMethodRef)
         {
             constantMethodRefs.Add(constantMethodRef);
-            router.Add(counter++, constantMethodRefs.Count);
+            router.Add(constantMethodRefs.Count-1);
         }
         public void AddConstantMethodType(ConstantMethodType constantMethodType)
         {
             constantMethodTypes.Add(constantMethodType);
-            router.Add(counter++, constantMethodTypes.Count);
+            router.Add(constantMethodTypes.Count-1);
         }
         public void AddConstantModule(ConstantModule constantModule)
         {
             constantModules.Add(constantModule);
-            router.Add(counter++, constantModules.Count);
+            router.Add(constantModules.Count-1);
         }
         public void AddConstantNameAndType(ConstantNameAndType constantNameAndType)
         {
             constantNameAndTypes.Add(constantNameAndType);
-            router.Add(counter++, constantNameAndTypes.Count);
+            router.Add(constantNameAndTypes.Count-1);
         }
         public void AddConstantPackage(ConstantPackage constantPackage)
         {
             constantPackages.Add(constantPackage);
-            router.Add(counter++, constantPackages.Count);
+            router.Add(constantPackages.Count-1);
         }
         public void AddConstantString(ConstantString constantString)
         {
             constantStrings.Add(constantString);
-            router.Add(counter++, constantStrings.Count);
+            router.Add(constantStrings.Count-1);
         }
         public void AddConstantUtf8(ConstantUtf8 constantUtf8)
         {
             constantUtf8s.Add(constantUtf8);
-            router.Add(counter++, constantUtf8s.Count);
+            router.Add(constantUtf8s.Count-1);
         }
         /// <summary>
         /// Вызов конструктора формирует пул констант данного *.class файла
@@ -210,7 +188,7 @@ namespace JavaInterpreter
         public ConstantPool()
         {
             counter = 1;
-            router = new Dictionary<int, int>();
+            router = new List<int>();
             constantClasses = new List<ConstantClass>();
             constantDoubles = new List<double>();
             constantFieldRefs = new List<ConstantFieldRef>();

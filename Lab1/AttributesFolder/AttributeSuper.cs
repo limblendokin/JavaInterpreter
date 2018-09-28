@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JavaInterpreter.AttributesFolder
 {
-    class AttributeSuper
+    abstract class AttributeSuper
     {
         protected ushort attributeNameIndex;
         public ushort AttributeNameIndex { get => attributeNameIndex; }

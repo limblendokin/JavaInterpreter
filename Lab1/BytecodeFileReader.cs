@@ -14,7 +14,8 @@ namespace JavaInterpreter
             if (File.Exists(path))
             {
                 byte[] bytecode = File.ReadAllBytes(path);
-                return new JavaClass(bytecode);
+                BytecodeReader reader = new BytecodeReader(bytecode);
+                return JavaClassInitializer.Initialize(reader);
             }
             else throw new FileNotFoundException();
         }

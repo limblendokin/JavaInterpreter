@@ -15,5 +15,6 @@ namespace JavaInterpreter.ConstantsFolder
         {
             this.nameIndex = nameIndex;
         }
+        
     }
 }

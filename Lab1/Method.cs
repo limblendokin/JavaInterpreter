@@ -45,7 +45,7 @@ namespace JavaInterpreter
             this.thisMethodName = thisMethodName;
         }
 
-        public static Method Create(byte[] code, ushort methodsCount, ref int curIndex, ConstantPool cp)
+        public static Method Create(ushort methodsCount, Byte)
         {
             ushort accessFlags = Helper.ToUShort(code, ref curIndex);
 

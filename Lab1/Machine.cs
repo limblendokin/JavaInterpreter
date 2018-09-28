@@ -9,24 +9,37 @@ using System.IO;
 
 namespace JavaInterpreter
 {
-    class Machine
+    class Machine : IMachineFrameControl
     {
-        private List<Frame> frames;
-        private int frameStackPointer;
+        private Stack<Frame> frames;
         Heap heap;
-
-        List<JavaClass> loadedClasses;
+        private ClassLoader classLoader;
         JavaClass currentClass;
         
-        public Machine(List<JavaClass> loadedClasses)
+        public Machine()
         {
-            // Считывание классов, встречающихся в пуле констант исходного *.class файла 
-            this.loadedClasses = loadedClasses;
-            frames = new List<Frame>();
+            frames = new Stack<Frame>();
         }
+
+        public void CallMethod(string className, string methodName, List<object> pushedArgs)
+        {
+            currentClass = classLoader.LoadClass(className);
+
+        }
+
+        public void CallMethod(ObjectReference objReference, string className, string methodName, List<object> pushedArgs)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public object Return(object returnValue)
+        {
+            throw new NotImplementedException();
+        }
+
         public uint run()
         {
-            heap = new Heap(loadedClasses);
+            //heap = new Heap(loadedClasses);
             AttributeCode codeAttribute;
             int frameStackPointer = frames.Count - 1;
             Message msg;

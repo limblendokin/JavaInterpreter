@@ -11,26 +11,26 @@ namespace JavaInterpreter
 {
     class Frame
     {
-        private uint pc;
         Heap heap;
         private Object[] localVarArray;
+        private Stack operandStack;
         private ConstantPool cp;
-        private byte[] code;
-        private Message msg;
-        public Object pushedValue;
+        
+        private IFrameCommand frameCommand;
         JavaClass currentClass;
+        BytecodeReader reader;
         public Frame(JavaClass javaClass, Heap h, AttributeCode codeAttribute)
         {
             this.heap = h;
             this.currentClass = javaClass;
             this.cp = javaClass.ConstantPool;
-            this.code = codeAttribute.Code;
+            reader = new BytecodeReader(codeAttribute.Code);
             localVarArray = new Object[codeAttribute.MaxLocals];
-            OperandStack variableStack = new OperandStack(codeAttribute.MaxStack);
+            operandStack = new Stack(codeAttribute.MaxStack);
         }
         public void pushArgs(Object value)
         {
-            push(value);
+            operandStack.Push(value);
         }
         public void pushArgs(List<Object> values)
         {
@@ -41,19 +41,15 @@ namespace JavaInterpreter
                 addLocalVar(j, values.ElementAt(i));
             }
         }
-        public Message run()
+        public IFrameCommand run()
         {
-            if (pushedValue != null)
-            {
-                push(pushedValue);
-            }
-            pushedValue = null;
-            msg = null;
-            while (this.pc < code.Length && msg==null)
+            // pushArgs
+            frameCommand = null;
+            while (this.pc < code.Length && frameCommand==null)
             {
                 NextCommand();
             }
-            return msg;
+            return frameCommand;
         }
         private void addLocalVar(int index, Object value)
         {
@@ -63,30 +59,352 @@ namespace JavaInterpreter
         {
             return localVarArray[index];
         }
-        private Object getOperand(int length)
-        {
-            int value = code[pc];
-            pc++;
-
-            for (int i = 1; i<length; i++, pc++)
-            {
-                value = value * 256;
-                value = value + code[pc];
-            }
-            return value;
-        }
         public void NextCommand()
         {
-            Object tmp1 = 0;
-            Object tmp2 = 0;
-            Object tmp3 = 0;
-            Object tmp4 = 0;
-            ConstantFieldRef cfr;
-            ConstantMethodRef cmr;
-            ClassEntity classInstance;
-            List<Object> args = new List<object>();
-            String str;
-            Field field;
+            Dictionary<uint, Action> instructionSet = new Dictionary<uint, Action>();
+            instructionSet.Add(0x00, ()=> { });
+            //push null ref
+            instructionSet.Add(0x01, ()=> operandStack.Push(null));
+            instructionSet.Add(0x02, ()=> operandStack.Push((int)-1));
+            instructionSet.Add(0x03, () => operandStack.Push((int)0));
+            instructionSet.Add(0x04, () => operandStack.Push((int)1));
+            instructionSet.Add(0x05, () => operandStack.Push((int)2));
+            instructionSet.Add(0x06, () => operandStack.Push((int)3));
+            instructionSet.Add(0x07, () => operandStack.Push((int)4));
+            instructionSet.Add(0x08, () => operandStack.Push((int)5));
+            instructionSet.Add(0x09, () => operandStack.Push((long)0));
+            instructionSet.Add(0x0a, () => operandStack.Push((long)1));
+            instructionSet.Add(0x0b, () => operandStack.Push((float)0));
+            instructionSet.Add(0x0c, () => operandStack.Push((float)1));
+            instructionSet.Add(0x0d, () => operandStack.Push((float)2));
+            instructionSet.Add(0x0e, () => operandStack.Push((double)0));
+            instructionSet.Add(0x0f, () => operandStack.Push((double)1));
+            instructionSet.Add(0x10, () => operandStack.Push(reader.ReadByte()));
+            instructionSet.Add(0x11, () => operandStack.Push(reader.ReadShort()));
+            // ldc
+            instructionSet.Add(0x12, () => );
+            //ldc_w
+            instructionSet.Add(0x13, () =>);
+            //ldc2_w
+            instructionSet.Add(0x14, () =>);
+            instructionSet.Add(0x15, () =>operandStack.Push((int)getLocalVar(reader.ReadInt())));
+            instructionSet.Add(0x16, () => operandStack.Push((long)getLocalVar(reader.ReadInt())));
+            instructionSet.Add(0x17, () => operandStack.Push((float)getLocalVar(reader.ReadInt())));
+            instructionSet.Add(0x18, () => operandStack.Push((double)getLocalVar(reader.ReadInt())));
+            //aload
+            instructionSet.Add(0x19, () => operandStack.Push((int)getLocalVar(reader.ReadInt())));
+            instructionSet.Add(0x1a, () => operandStack.Push((int)getLocalVar(0)));
+            instructionSet.Add(0x1b, () => operandStack.Push((int)getLocalVar(1)));
+            instructionSet.Add(0x1c, () => operandStack.Push((int)getLocalVar(2)));
+            instructionSet.Add(0x1d, () => operandStack.Push((int)getLocalVar(4)));
+            instructionSet.Add(0x1e, () => operandStack.Push((long)getLocalVar(0)));
+            instructionSet.Add(0x1f, () => operandStack.Push((long)getLocalVar(1)));
+            instructionSet.Add(0x20, () => operandStack.Push((long)getLocalVar(2)));
+            instructionSet.Add(0x21, () => operandStack.Push((long)getLocalVar(3)));
+            instructionSet.Add(0x22, () => operandStack.Push((float)getLocalVar(0)));
+            instructionSet.Add(0x23, () => operandStack.Push((float)getLocalVar(1)));
+            instructionSet.Add(0x24, () => operandStack.Push((float)getLocalVar(2)));
+            instructionSet.Add(0x25, () => operandStack.Push((float)getLocalVar(3)));
+            instructionSet.Add(0x26, () => operandStack.Push((double)getLocalVar(0)));
+            instructionSet.Add(0x27, () => operandStack.Push((double)getLocalVar(1)));
+            instructionSet.Add(0x28, () => operandStack.Push((double)getLocalVar(2)));
+            instructionSet.Add(0x29, () => operandStack.Push((double)getLocalVar(3)));
+            //aload 4 times
+            instructionSet.Add(0x2a, () => );
+            instructionSet.Add(0x2b, () =>);
+            instructionSet.Add(0x2c, () =>);
+            instructionSet.Add(0x2d, () =>);
+            instructionSet.Add(0x2e, () =>);
+            instructionSet.Add(0x2f, () =>);
+            instructionSet.Add(0x30, () =>);
+            instructionSet.Add(0x31, () =>);
+            instructionSet.Add(0x32, () =>);
+            instructionSet.Add(0x33, () =>);
+            instructionSet.Add(0x34, () =>);
+            instructionSet.Add(0x35, () =>);
+            instructionSet.Add(0x36, () => addLocalVar(reader.ReadInt(), operandStack.Pop()));
+            instructionSet.Add(0x37, () => addLocalVar(reader.ReadInt(), operandStack.Pop()));
+            instructionSet.Add(0x38, () => addLocalVar(reader.ReadInt(), operandStack.Pop()));
+            instructionSet.Add(0x39, () => addLocalVar(reader.ReadInt(), operandStack.Pop()));
+            // astore
+            instructionSet.Add(0x3a, () =>);
+            instructionSet.Add(0x3b, () => addLocalVar(0, operandStack.Pop()));
+            instructionSet.Add(0x3c, () => addLocalVar(1, operandStack.Pop()));
+            instructionSet.Add(0x3d, () => addLocalVar(2, operandStack.Pop()));
+            instructionSet.Add(0x3e, () => addLocalVar(3, operandStack.Pop()));
+            instructionSet.Add(0x3f, () => addLocalVar(0, operandStack.Pop()));
+            instructionSet.Add(0x40, () => addLocalVar(1, operandStack.Pop()));
+            instructionSet.Add(0x41, () => addLocalVar(2, operandStack.Pop()));
+            instructionSet.Add(0x42, () => addLocalVar(3, operandStack.Pop()));
+            instructionSet.Add(0x43, () => addLocalVar(0, operandStack.Pop()));
+            instructionSet.Add(0x44, () => addLocalVar(1, operandStack.Pop()));
+            instructionSet.Add(0x45, () => addLocalVar(2, operandStack.Pop()));
+            instructionSet.Add(0x46, () => addLocalVar(3, operandStack.Pop()));
+            instructionSet.Add(0x47, () => addLocalVar(0, operandStack.Pop()));
+            instructionSet.Add(0x48, () => addLocalVar(1, operandStack.Pop()));
+            instructionSet.Add(0x49, () => addLocalVar(2, operandStack.Pop()));
+            instructionSet.Add(0x4a, () => addLocalVar(3, operandStack.Pop()));
+            // astore 3 times
+            instructionSet.Add(0x4b, () =>);
+            instructionSet.Add(0x4c, () =>);
+            instructionSet.Add(0x4d, () =>);
+            instructionSet.Add(0x4e, () =>);
+            instructionSet.Add(0x4f, () =>);
+            instructionSet.Add(0x50, () =>);
+            instructionSet.Add(0x51, () =>);
+            instructionSet.Add(0x52, () =>);
+            instructionSet.Add(0x53, () =>);
+            instructionSet.Add(0x54, () =>);
+            instructionSet.Add(0x55, () =>);
+            instructionSet.Add(0x56, () =>);
+            instructionSet.Add(0x57, () => operandStack.Pop());
+            instructionSet.Add(0x58, () => operandStack.Pop());
+            instructionSet.Add(0x59, () => 
+            {
+                Object tmp = operandStack.Pop();
+                operandStack.Push(tmp);
+                operandStack.Push(tmp);
+            });
+            instructionSet.Add(0x5a, () =>
+            {
+                var tmp1 = operandStack.Pop();
+                var tmp2 = operandStack.Pop();
+                operandStack.Push(tmp1);
+                operandStack.Push(tmp2);
+                operandStack.Push(tmp1);
+            });
+            instructionSet.Add(0x5b, () =>
+            {
+                var tmp1 = operandStack.Pop();
+                var tmp2 = operandStack.Pop();
+                var tmp3 = operandStack.Pop();
+                operandStack.Push(tmp1);
+                operandStack.Push(tmp3);
+                operandStack.Push(tmp2);
+                operandStack.Push(tmp1);
+            });
+            instructionSet.Add(0x5c, () =>
+            {
+                var tmp1 = operandStack.Pop();
+                var tmp2 = operandStack.Pop();
+                operandStack.Push(tmp2);
+                operandStack.Push(tmp1);
+                operandStack.Push(tmp2);
+                operandStack.Push(tmp1);
+            });
+            instructionSet.Add(0x5d, () =>
+            {
+                var tmp1 = operandStack.Pop();
+                var tmp2 = operandStack.Pop();
+                var tmp3 = operandStack.Pop();
+                operandStack.Push(tmp2);
+                operandStack.Push(tmp1);
+                operandStack.Push(tmp3);
+                operandStack.Push(tmp2);
+                operandStack.Push(tmp1);
+            });
+            instructionSet.Add(0x5e, () =>
+            {
+                var tmp1 = operandStack.Pop();
+                var tmp2 = operandStack.Pop();
+                var tmp3 = operandStack.Pop();
+                var tmp4 = operandStack.Pop();
+                operandStack.Push(tmp2);
+                operandStack.Push(tmp1);
+                operandStack.Push(tmp4);
+                operandStack.Push(tmp3);
+                operandStack.Push(tmp2);
+                operandStack.Push(tmp1);
+            });
+            instructionSet.Add(0x5f, () =>
+            {
+                var tmp1 = operandStack.Pop();
+                var tmp2 = operandStack.Pop();
+                operandStack.Push(tmp1);
+                operandStack.Push(tmp2);
+            });
+            instructionSet.Add(0x60, () => operandStack.Push((int)operandStack.Pop()+(int)operandStack.Pop()));
+            instructionSet.Add(0x61, () => operandStack.Push((long)operandStack.Pop() + (long)operandStack.Pop()));
+            instructionSet.Add(0x62, () => operandStack.Push((float)operandStack.Pop() + (float)operandStack.Pop()));
+            instructionSet.Add(0x63, () => operandStack.Push((double)operandStack.Pop() + (double)operandStack.Pop()));
+            instructionSet.Add(0x64, () => operandStack.Push(-(int)operandStack.Pop() + (int)operandStack.Pop()));
+            instructionSet.Add(0x65, () => operandStack.Push(-(long)operandStack.Pop() + (long)operandStack.Pop()));
+            instructionSet.Add(0x66, () => operandStack.Push(-(float)operandStack.Pop() + (float)operandStack.Pop()));
+            instructionSet.Add(0x67, () => operandStack.Push(-(double)operandStack.Pop() + (double)operandStack.Pop()));
+            instructionSet.Add(0x68, () => operandStack.Push((int)operandStack.Pop() * (int)operandStack.Pop()));
+            instructionSet.Add(0x69, () => operandStack.Push((long)operandStack.Pop() * (long)operandStack.Pop()));
+            instructionSet.Add(0x6a, () => operandStack.Push((float)operandStack.Pop() * (float)operandStack.Pop()));
+            instructionSet.Add(0x6b, () => operandStack.Push((double)operandStack.Pop() * (double)operandStack.Pop()));
+            instructionSet.Add(0x6c, () =>
+            {
+                var tmp = operandStack.Pop();
+                operandStack.Push((int)operandStack.Pop() / (int)tmp);
+            });
+            instructionSet.Add(0x6d, () =>
+            {
+                var tmp = operandStack.Pop();
+                operandStack.Push((long)operandStack.Pop() / (long)tmp);
+            });
+            instructionSet.Add(0x6e, () =>
+            {
+                var tmp = operandStack.Pop();
+                operandStack.Push((float)operandStack.Pop() / (float)tmp);
+            });
+            instructionSet.Add(0x6f, () =>
+            {
+                var tmp = operandStack.Pop();
+                operandStack.Push((double)operandStack.Pop() / (double)tmp);
+            });
+            instructionSet.Add(0x70, () =>
+            {
+                var tmp = operandStack.Pop();
+                operandStack.Push((int)operandStack.Pop() % (int)tmp);
+            });
+            instructionSet.Add(0x71, () =>
+            {
+                var tmp = operandStack.Pop();
+                operandStack.Push((long)operandStack.Pop() % (long)tmp);
+            });
+            instructionSet.Add(0x72, () =>
+            {
+                var tmp = operandStack.Pop();
+                operandStack.Push((float)operandStack.Pop() % (float)tmp);
+            });
+            instructionSet.Add(0x73, () =>
+            {
+                var tmp = operandStack.Pop();
+                operandStack.Push((double)operandStack.Pop() % (double)tmp);
+            });
+            instructionSet.Add(0x74, () =>operandStack.Push(-(int)operandStack.Pop()));
+            instructionSet.Add(0x75, () => operandStack.Push(-(long)operandStack.Pop()));
+            instructionSet.Add(0x76, () => operandStack.Push(-(float)operandStack.Pop()));
+            instructionSet.Add(0x77, () => operandStack.Push(-(double)operandStack.Pop()));
+            instructionSet.Add(0x78, () =>
+            {
+                var tmp = operandStack.Pop();
+                operandStack.Push((int)operandStack.Pop() << (int)tmp);
+            });
+            instructionSet.Add(0x79, () =>
+            {
+                var tmp = operandStack.Pop();
+                operandStack.Push((long)operandStack.Pop() << (int)tmp);
+            });
+            instructionSet.Add(0x7a, () =>
+            {
+                var tmp = operandStack.Pop();
+                operandStack.Push((int)operandStack.Pop() >> (int)tmp);
+            });
+            instructionSet.Add(0x7b, () =>
+            {
+                var tmp = operandStack.Pop();
+                operandStack.Push((long)operandStack.Pop() >> (int)tmp);
+            });
+            instructionSet.Add(0x7c, () =>
+            {
+                var tmp = operandStack.Pop();
+                operandStack.Push((int)((uint)operandStack.Pop() >> (int)tmp));
+            });
+            instructionSet.Add(0x7d, () =>
+            {
+                var tmp = operandStack.Pop();
+                operandStack.Push((int)((ulong)operandStack.Pop() >> (int)tmp));
+            });
+            instructionSet.Add(0x7e, () =>operandStack.Push((int)operandStack.Pop()&(int)operandStack.Pop()));
+            instructionSet.Add(0x7f, () => operandStack.Push((long)operandStack.Pop() & (long)operandStack.Pop()));
+            instructionSet.Add(0x80, () => operandStack.Push((int)operandStack.Pop() | (int)operandStack.Pop()));
+            instructionSet.Add(0x81, () => operandStack.Push((long)operandStack.Pop() | (long)operandStack.Pop()));
+            instructionSet.Add(0x82, () => operandStack.Push((int)operandStack.Pop() ^ (int)operandStack.Pop()));
+            instructionSet.Add(0x83, () => operandStack.Push((int)operandStack.Pop() ^ (int)operandStack.Pop()));
+            // TODO: check for sign
+            instructionSet.Add(0x84, () =>
+            {
+                var tmp = reader.ReadInt();
+                addLocalVar(tmp, (int)getLocalVar((int)tmp) + reader.ReadInt());
+            });
+            instructionSet.Add(0x85, () => operandStack.Push(Convert.ToInt64((int)operandStack.Pop())));
+            instructionSet.Add(0x86, () => operandStack.Push(Convert.ToSingle((int)operandStack.Pop())));
+            instructionSet.Add(0x87, () => operandStack.Push(Convert.ToDouble((int)operandStack.Pop())));
+            instructionSet.Add(0x88, () => operandStack.Push(Convert.ToInt32((long)operandStack.Pop())));
+            instructionSet.Add(0x89, () => operandStack.Push(Convert.ToSingle((long)operandStack.Pop())));
+            instructionSet.Add(0x8a, () => operandStack.Push(Convert.ToDouble((long)operandStack.Pop())));
+            instructionSet.Add(0x8b, () => operandStack.Push(Convert.ToInt32((float)operandStack.Pop())));
+            instructionSet.Add(0x8c, () => operandStack.Push(Convert.ToInt64((float)operandStack.Pop())));
+            instructionSet.Add(0x8d, () => operandStack.Push(Convert.ToDouble((float)operandStack.Pop())));
+            instructionSet.Add(0x8e, () => operandStack.Push(Convert.ToInt32((double)operandStack.Pop())));
+            instructionSet.Add(0x8f, () => operandStack.Push(Convert.ToInt64((double)operandStack.Pop())));
+            instructionSet.Add(0x90, () => operandStack.Push(Convert.ToSingle((double)operandStack.Pop())));
+            instructionSet.Add(0x91, () => operandStack.Push(Convert.ToByte((int)operandStack.Pop())));
+            instructionSet.Add(0x92, () => operandStack.Push(Convert.ToChar((int)operandStack.Pop())));
+            instructionSet.Add(0x93, () => operandStack.Push(Convert.ToInt16((int)operandStack.Pop())));
+            instructionSet.Add(0x94, () =>
+            {
+                var tmp1 = operandStack.Pop();
+                var tmp2 = operandStack.Pop();
+                operandStack.Push((long)tmp1 > (long)tmp2 ? 1 : (long)tmp1 < (long)tmp2 ? -1 : 0);
+            });
+            instructionSet.Add(0x95, () =>
+            {
+                var tmp1 = operandStack.Pop();
+                var tmp2 = operandStack.Pop();
+                operandStack.Push((float)tmp1 > (float)tmp2 ? 1 : (float)tmp1 < (float)tmp2 ? -1 : 0);
+            });
+            instructionSet.Add(0x96, () =>
+            {
+                var tmp1 = operandStack.Pop();
+                var tmp2 = operandStack.Pop();
+                operandStack.Push((float)tmp1 > (float)tmp2 ? 1 : (float)tmp1 < (float)tmp2 ? -1 : 0);
+            });
+            instructionSet.Add(0x97, () =>
+            {
+                var tmp1 = operandStack.Pop();
+                var tmp2 = operandStack.Pop();
+                operandStack.Push((double)tmp1 > (double)tmp2 ? 1 : (double)tmp1 < (double)tmp2 ? -1 : 0);
+            });
+            instructionSet.Add(0x98, () =>
+            {
+                var tmp1 = operandStack.Pop();
+                var tmp2 = operandStack.Pop();
+                operandStack.Push((double)tmp1 > (double)tmp2 ? 1 : (double)tmp1 < (double)tmp2 ? -1 : 0);
+            });
+            instructionSet.Add(0x99, () =>
+            instructionSet.Add(0x9a, () =>
+            instructionSet.Add(0x9b, () =>
+            instructionSet.Add(0x9c, () =>
+            instructionSet.Add(0x9d, () =>
+            instructionSet.Add(0x9e, () =>
+            instructionSet.Add(0x9f, () =>
+            instructionSet.Add(0xa0, () =>
+            instructionSet.Add(0xa1, () =>
+            instructionSet.Add(0xa2, () =>
+            instructionSet.Add(0xa3, () =>
+            instructionSet.Add(0xa4, () =>
+            instructionSet.Add(0xa5, () =>
+            instructionSet.Add(0xa6, () =>
+            instructionSet.Add(0xa7, () =>
+            instructionSet.Add(0xa8, () =>
+            instructionSet.Add(0xa9, () =>
+            instructionSet.Add(0xaa, () =>
+            instructionSet.Add(0xab, () =>
+            instructionSet.Add(0xac, () =>
+            instructionSet.Add(0xad, () =>
+            instructionSet.Add(0xae, () =>
+            instructionSet.Add(0xaf, () =>
+            instructionSet.Add(0xb0, () =>
+            instructionSet.Add(0xb1, () =>
+            instructionSet.Add(0xb2, () =>
+            instructionSet.Add(0xb3, () =>
+            instructionSet.Add(0xb4, () =>
+            instructionSet.Add(0xb5, () =>
+            instructionSet.Add(0xb6, () =>
+            instructionSet.Add(0xb7, () =>
+            instructionSet.Add(0xb8, () =>
+            instructionSet.Add(0xb9, () =>
+            instructionSet.Add(0xba, () =>
+            instructionSet.Add(0xbb, () =>
+            instructionSet.Add(0xbc, () =>
+            instructionSet.Add(0xbd, () =>
+            instructionSet.Add(0xbe, () =>
+            instructionSet.Add(0xbf, () =>
             // Выполнение инструкции по коду инструкции
             switch (code[pc++])
             {
@@ -95,71 +413,71 @@ namespace JavaInterpreter
                     break;
                 // aconst_null
                 case 0x01:
-                    push(null);
+                    operandStack.Push(null);
                     break;
                 // iconst_m1
                 case 0x02:
-                    push((int)-1);
+                    operandStack.Push((int)-1);
                     break;
                 // iconst_0
                 case 0x03:
-                    push((int)0);
+                    operandStack.Push((int)0);
                     break;
                 // iconst_1
                 case 0x04:
-                    push((int)1);
+                    operandStack.Push((int)1);
                     break;
                 // iconst_2
                 case 0x05:
-                    push((int)2);
+                    operandStack.Push((int)2);
                     break;
                 // iconst_3
                 case 0x06:
-                    push((int)3);
+                    operandStack.Push((int)3);
                     break;
                 // iconst_4
                 case 0x07:
-                    push((int)4);
+                    operandStack.Push((int)4);
                     break;
                 // iconst_5
                 case 0x08:
-                    push((int)5);
+                    operandStack.Push((int)5);
                     break;
                 // lconst_0
                 case 0x09:
-                    push((long)0);
+                    operandStack.Push((long)0);
                     break;
                 // lconst_1
                 case 0x0a:
-                    push((long)1);
+                    operandStack.Push((long)1);
                     break;
                 // fconst_0
                 case 0x0b:
-                    push((float)0);
+                    operandStack.Push((float)0);
                     break;
                 // fconst_1
                 case 0x0c:
-                    push((float)1);
+                    operandStack.Push((float)1);
                     break;
                 // fconst_2
                 case 0x0d:
-                    push((float)2);
+                    operandStack.Push((float)2);
                     break;
                 // dconst_0
                 case 0x0e:
-                    push((double)0);
+                    operandStack.Push((double)0);
                     break;
                 // dconst_1
                 case 0x0f:
-                    push((double)1);
+                    operandStack.Push((double)1);
                     break;
                 // bipush
                 case 0x10:
-                    push((int)getOperand(1));
+                    operandStack.Push((int)getOperand(1));
                     break;
                 // sipush
                 case 0x11:
-                    push((int)getOperand(2));
+                    operandStack.Push((int)getOperand(2));
                     break;
                 // ldc
                 // TODO: Class, MethodHandle, MethodType
@@ -170,15 +488,15 @@ namespace JavaInterpreter
                         //String
                         // TODO: check if implemented correctly 
                         case 0x08:
-                            push(cp.getConstantUtf8(cp.getConstantString((int)tmp1).StringIndex).Value);
+                            operandStack.Push(cp.getConstantUtf8(cp.getConstantString((int)tmp1).StringIndex).Value);
                             break;
                         // int 
                         case 0x03:
-                            push(cp.getConstantInteger((int)tmp1).Value);
+                            operandStack.Push(cp.getConstantInteger((int)tmp1).Value);
                             break;
                         // float
                         case 0x04:
-                            push(cp.getConstantFloat((int)tmp1).Value);
+                            operandStack.Push(cp.getConstantFloat((int)tmp1).Value);
                             break;
                         // Class
                         case 0x07:
@@ -198,107 +516,107 @@ namespace JavaInterpreter
                 // ldc2_w
                 //TODO: ldc2_w
                 case 0x14:
-                    push(null);
+                    operandStack.Push(null);
                     break;
                 // iload
                 case 0x15:
-                    push((int)getLocalVar((int)getOperand(1)));
+                    operandStack.Push((int)getLocalVar((int)getOperand(1)));
                     break;
                 // lload
                 case 0x16:
-                    push((long)getLocalVar((int)getOperand(1)));
+                    operandStack.Push((long)getLocalVar((int)getOperand(1)));
                     break;
                 // fload
                 case 0x17:
-                    push((float)getLocalVar((int)getOperand(1)));
+                    operandStack.Push((float)getLocalVar((int)getOperand(1)));
                     break;
                 // dload
                 case 0x18:
-                    push((double)getLocalVar((int)getOperand(1)));
+                    operandStack.Push((double)getLocalVar((int)getOperand(1)));
                     break;
                 // aload
                 case 0x19:
-                    push(getLocalVar((int)getOperand(1)));
+                    operandStack.Push(getLocalVar((int)getOperand(1)));
                     break;
                 // iload_0
                 case 0x1a:
-                    push((int)getLocalVar(0));
+                    operandStack.Push((int)getLocalVar(0));
                     break;
                 // iload_1
                 case 0x1b:
-                    push((int)getLocalVar(1));
+                    operandStack.Push((int)getLocalVar(1));
                     break;
                 // iload_2
                 case 0x1c:
-                    push((int)getLocalVar(2));
+                    operandStack.Push((int)getLocalVar(2));
                     break;
                 // iload_3
                 case 0x1d:
-                    push((int)getLocalVar(3));
+                    operandStack.Push((int)getLocalVar(3));
                     break;
                 // lload_0
                 case 0x1e:
-                    push((long)getLocalVar(0));
+                    operandStack.Push((long)getLocalVar(0));
                     break;
                 // lload_1
                 case 0x1f:
-                    push((long)getLocalVar(1));
+                    operandStack.Push((long)getLocalVar(1));
                     break;
                 // lload_2
                 case 0x20:
-                    push((long)getLocalVar(2));
+                    operandStack.Push((long)getLocalVar(2));
                     break;
                 // lload_3
                 case 0x21:
-                    push((long)getLocalVar(3));
+                    operandStack.Push((long)getLocalVar(3));
                     break;
                 // fload_0
                 case 0x22:
-                    push((float)getLocalVar(0));
+                    operandStack.Push((float)getLocalVar(0));
                     break;
                 // fload_1
                 case 0x23:
-                    push((float)getLocalVar(1));
+                    operandStack.Push((float)getLocalVar(1));
                     break;
                 // fload_2
                 case 0x24:
-                    push((float)getLocalVar(2));
+                    operandStack.Push((float)getLocalVar(2));
                     break;
                 // fload_3
                 case 0x25:
-                    push((float)getLocalVar(3));
+                    operandStack.Push((float)getLocalVar(3));
                     break;
                 // dload_0
                 case 0x26:
-                    push((double)getLocalVar(0));
+                    operandStack.Push((double)getLocalVar(0));
                     break;
                 // dload_1
                 case 0x27:
-                    push((double)getLocalVar(1));
+                    operandStack.Push((double)getLocalVar(1));
                     break;
                 // dload_2
                 case 0x28:
-                    push((double)getLocalVar(2));
+                    operandStack.Push((double)getLocalVar(2));
                     break;
                 // dload_3
                 case 0x29:
-                    push((double)getLocalVar(3));
+                    operandStack.Push((double)getLocalVar(3));
                     break;
                 // aload_0
                 case 0x2a:
-                    push(getLocalVar(0));
+                    operandStack.Push(getLocalVar(0));
                     break;
                 // aload_1
                 case 0x2b:
-                    push(getLocalVar(1));
+                    operandStack.Push(getLocalVar(1));
                     break;
                 // aload_2
                 case 0x2c:
-                    push(getLocalVar(2));
+                    operandStack.Push(getLocalVar(2));
                     break;
                 // aload_3
                 case 0x2d:
-                    push(getLocalVar(3));
+                    operandStack.Push(getLocalVar(3));
                     break;
                 // iaload
                 // TODO: arrayref in heap zone
@@ -431,46 +749,46 @@ namespace JavaInterpreter
                 // dup
                 case 0x59:
                     tmp1 = pop();
-                    push(tmp1);
-                    push(tmp1);
+                    operandStack.Push(tmp1);
+                    operandStack.Push(tmp1);
                     break;
                 // dup_x1
                 case 0x5a:
                     tmp1 = pop();
                     tmp2 = pop();
-                    push(tmp1);
-                    push(tmp2);
-                    push(tmp1);
+                    operandStack.Push(tmp1);
+                    operandStack.Push(tmp2);
+                    operandStack.Push(tmp1);
                     break;
                 // dup_x2
                 case 0x5b:
                     tmp1 = pop();
                     tmp2 = pop();
                     tmp3 = pop();
-                    push(tmp1);
-                    push(tmp3);
-                    push(tmp2);
-                    push(tmp1);
+                    operandStack.Push(tmp1);
+                    operandStack.Push(tmp3);
+                    operandStack.Push(tmp2);
+                    operandStack.Push(tmp1);
                     break;
                 // dup2
                 case 0x5c:
                     tmp1 = pop();
                     tmp2 = pop();
-                    push(tmp2);
-                    push(tmp1);
-                    push(tmp2);
-                    push(tmp1);
+                    operandStack.Push(tmp2);
+                    operandStack.Push(tmp1);
+                    operandStack.Push(tmp2);
+                    operandStack.Push(tmp1);
                     break;
                 // dup2_x1
                 case 0x5d:
                     tmp1 = pop();
                     tmp2 = pop();
                     tmp3 = pop();
-                    push(tmp2);
-                    push(tmp1);
-                    push(tmp3);
-                    push(tmp2);
-                    push(tmp1);
+                    operandStack.Push(tmp2);
+                    operandStack.Push(tmp1);
+                    operandStack.Push(tmp3);
+                    operandStack.Push(tmp2);
+                    operandStack.Push(tmp1);
                     break;
                 // dup2_x2;
                 case 0x5e:
@@ -478,177 +796,177 @@ namespace JavaInterpreter
                     tmp2 = pop();
                     tmp3 = pop();
                     tmp4 = pop();
-                    push(tmp2);
-                    push(tmp1);
-                    push(tmp4);
-                    push(tmp3);
-                    push(tmp2);
-                    push(tmp1);
+                    operandStack.Push(tmp2);
+                    operandStack.Push(tmp1);
+                    operandStack.Push(tmp4);
+                    operandStack.Push(tmp3);
+                    operandStack.Push(tmp2);
+                    operandStack.Push(tmp1);
                     break;
                 // swap
                 case 0x5f:
                     tmp1 = pop();
                     tmp2 = pop();
-                    push(tmp1);
-                    push(tmp2);
+                    operandStack.Push(tmp1);
+                    operandStack.Push(tmp2);
                     break;
                 // iadd
                 case 0x60:
-                    push((int)pop() + (int)pop());
+                    operandStack.Push((int)pop() + (int)pop());
                     break;
                 // ladd
                 case 0x61:
-                    push((long)pop() + (long)pop());
+                    operandStack.Push((long)pop() + (long)pop());
                     break;
                 // fadd
                 case 0x62:
-                    push((float)pop() + (float)pop());
+                    operandStack.Push((float)pop() + (float)pop());
                     break;
                 // dadd
                 case 0x63:
-                    push((double)pop() + (double)pop());
+                    operandStack.Push((double)pop() + (double)pop());
                     break;
                 // isub
                 case 0x64:
-                    push(-(int)pop() + (int)pop());
+                    operandStack.Push(-(int)pop() + (int)pop());
                     break;
                 // lsub
                 case 0x65:
-                    push(-(long)pop() + (long)pop());
+                    operandStack.Push(-(long)pop() + (long)pop());
                     break;
                 // fsub
                 case 0x66:
-                    push(-(float)pop() + (float)pop());
+                    operandStack.Push(-(float)pop() + (float)pop());
                     break;
                 // dsub
                 case 0x67:
-                    push(-(double)pop() + (float)pop());
+                    operandStack.Push(-(double)pop() + (double)pop());
                     break;
                 // imul
                 case 0x68:
-                    push((int)pop() * (int)pop());
+                    operandStack.Push((int)pop() * (int)pop());
                     break;
                 // lmul
                 case 0x69:
-                    push((long)pop() * (long)pop());
+                    operandStack.Push((long)pop() * (long)pop());
                     break;
                 // fmul
                 case 0x6a:
-                    push((float)pop() * (float)pop());
+                    operandStack.Push((float)pop() * (float)pop());
                     break;
                 // dmul
                 case 0x6b:
-                    push((double)pop() * (double)pop());
+                    operandStack.Push((double)pop() * (double)pop());
                     break;
                 // idiv
                 case 0x6c:
                     tmp1 = pop();
-                    push((int)pop() / (int)tmp1);
+                    operandStack.Push((int)pop() / (int)tmp1);
                     break;
                 // ldiv
                 case 0x6d:
                     tmp1 = pop();
-                    push((long)pop() / (long)tmp1);
+                    operandStack.Push((long)pop() / (long)tmp1);
                     break;
                 // fdiv
                 case 0x6e:
                     tmp1 = pop();
-                    push((float)pop() / (float)tmp1);
+                    operandStack.Push((float)pop() / (float)tmp1);
                     break;
                 // ddiv
                 case 0x6f:
                     tmp1 = pop();
-                    push((double)pop() / (double)tmp1);
+                    operandStack.Push((double)pop() / (double)tmp1);
                     break;
                 // irem
                 case 0x70:
                     tmp1 = pop();
-                    push((int)pop() % (int)tmp1);
+                    operandStack.Push((int)pop() % (int)tmp1);
                     break;
                 // lrem
                 case 0x71:
                     tmp1 = pop();
-                    push((long)pop() % (long)tmp1);
+                    operandStack.Push((long)pop() % (long)tmp1);
                     break;
                 // frem
                 case 0x72:
                     tmp1 = pop();
-                    push((float)pop() % (float)tmp1);
+                    operandStack.Push((float)pop() % (float)tmp1);
                     break;
                 // drem 
                 case 0x73:
                     tmp1 = pop();
-                    push((double)pop() % (double)tmp1);
+                    operandStack.Push((double)pop() % (double)tmp1);
                     break;
                 // ineg
                 case 0x74:
-                    push(-(int)pop());
+                    operandStack.Push(-(int)pop());
                     break;
                 // lneg
                 case 0x75:
-                    push(-(long)pop());
+                    operandStack.Push(-(long)pop());
                     break;
                 // fneg
                 case 0x76:
-                    push(-(float)pop());
+                    operandStack.Push(-(float)pop());
                     break;
                 // dneg
                 case 0x77:
-                    push(-(double)pop());
+                    operandStack.Push(-(double)pop());
                     break;
                 // ishl
                 case 0x78:
                     tmp1 = pop();
-                    push((int)pop() << (int)tmp1);
+                    operandStack.Push((int)pop() << (int)tmp1);
                     break;
                 // lshl
                 case 0x79:
                     tmp1 = pop();
-                    push((long)pop() << (int)pop());
+                    operandStack.Push((long)pop() << (int)pop());
                     break;
                 // ishr
                 case 0x7a:
                     tmp1 = pop();
-                    push((int)pop() >> (int)tmp1);
+                    operandStack.Push((int)pop() >> (int)tmp1);
                     break;
                 // lshr
                 case 0x7b:
                     tmp1 = pop();
-                    push((long)pop() >> (int)pop());
+                    operandStack.Push((long)pop() >> (int)pop());
                     break;
                 // iushr
                 case 0x7c:
                     tmp1 = pop();
-                    push((int)((uint)pop() >> (int)pop()));
+                    operandStack.Push((int)((uint)pop() >> (int)pop()));
                     break;
                 // lushr
                 case 0x7d:
                     tmp1 = pop();
-                    push((long)((ulong)pop() >> (int)pop()));
+                    operandStack.Push((long)((ulong)pop() >> (int)pop()));
                     break;
                 // iand
                 case 0x7e:
-                    push((int)pop() & (int)pop());
+                    operandStack.Push((int)pop() & (int)pop());
                     break;
                 // land
                 case 0x7f:
-                    push((long)pop() & (long)pop());
+                    operandStack.Push((long)pop() & (long)pop());
                     break;
                 // ior
                 case 0x80:
-                    push((int)pop() | (int)pop());
+                    operandStack.Push((int)pop() | (int)pop());
                     break;
                 // lor
                 case 0x81:
-                    push((long)pop() | (long)pop());
+                    operandStack.Push((long)pop() | (long)pop());
                     break;
                 // ixor
                 case 0x82:
-                    push((int)pop() ^ (int)pop());
+                    operandStack.Push((int)pop() ^ (int)pop());
                     break;
                 // lxor
                 case 0x83:
-                    push((long)pop() ^ (long)pop());
+                    operandStack.Push((long)pop() ^ (long)pop());
                     break;
                 // iinc 
                 // TODO: check for sign
@@ -658,93 +976,93 @@ namespace JavaInterpreter
                     break;
                 // i2l
                 case 0x85:
-                    push(Convert.ToInt64((int)pop()));
+                    operandStack.Push(Convert.ToInt64((int)pop()));
                     break;
                 // i2f
                 case 0x86:
-                    push(Convert.ToSingle((int)pop()));
+                    operandStack.Push(Convert.ToSingle((int)pop()));
                     break;
                 // i2d
                 case 0x87:
-                    push(Convert.ToDouble((int)pop()));
+                    operandStack.Push(Convert.ToDouble((int)pop()));
                     break;
                 // l2i
                 case 0x88:
-                    push(Convert.ToInt32((long)pop()));
+                    operandStack.Push(Convert.ToInt32((long)pop()));
                     break;
                 // l2f
                 case 0x89:
-                    push(Convert.ToSingle((long)pop()));
+                    operandStack.Push(Convert.ToSingle((long)pop()));
                     break;
                 // l2d
                 case 0x8a:
-                    push(Convert.ToDouble((long)pop()));
+                    operandStack.Push(Convert.ToDouble((long)pop()));
                     break;
                 // f2i
                 case 0x8b:
-                    push(Convert.ToInt32((float)pop()));
+                    operandStack.Push(Convert.ToInt32((float)pop()));
                     break;
                 // f2l
                 case 0x8c:
-                    push(Convert.ToInt64((float)pop()));
+                    operandStack.Push(Convert.ToInt64((float)pop()));
                     break;
                 // f2d
                 case 0x8d:
-                    push(Convert.ToDouble((float)pop()));
+                    operandStack.Push(Convert.ToDouble((float)pop()));
                     break;
                 // d2i
                 case 0x8e:
-                    push(Convert.ToInt32((double)pop()));
+                    operandStack.Push(Convert.ToInt32((double)pop()));
                     break;
                 // d2l
                 case 0x8f:
-                    push(Convert.ToInt64((double)pop()));
+                    operandStack.Push(Convert.ToInt64((double)pop()));
                     break;
                 // d2f
                 case 0x90:
-                    push(Convert.ToSingle((double)pop()));
+                    operandStack.Push(Convert.ToSingle((double)pop()));
                     break;
                 // i2b
                 case 0x91:
-                    push(Convert.ToByte((int)pop()));
+                    operandStack.Push(Convert.ToByte((int)pop()));
                     break;
                 // i2c
                 case 0x92:
-                    push(Convert.ToChar((int)pop()));
+                    operandStack.Push(Convert.ToChar((int)pop()));
                     break;
                 // i2s
                 case 0x93:
-                    push(Convert.ToInt16((int)pop()));
+                    operandStack.Push(Convert.ToInt16((int)pop()));
                     break;
                 // lcmp
                 case 0x94:
                     tmp1 = pop();
                     tmp2 = pop();
-                    push((long)tmp1 > (long)tmp2 ? 1 : (long)tmp1 < (long)tmp2 ? -1 : 0);
+                    operandStack.Push((long)tmp1 > (long)tmp2 ? 1 : (long)tmp1 < (long)tmp2 ? -1 : 0);
                     break;
                 // fcmpl
                 case 0x95:
                     tmp1 = pop();
                     tmp2 = pop();
-                    push((float)tmp1 > (float)tmp2 ? 1 : (float)tmp1 < (float)tmp2 ? -1 : 0);
+                    operandStack.Push((float)tmp1 > (float)tmp2 ? 1 : (float)tmp1 < (float)tmp2 ? -1 : 0);
                     break;
                 // fcmpg
                 case 0x96:
                     tmp1 = pop();
                     tmp2 = pop();
-                    push((float)tmp1 > (float)tmp2 ? 1 : (float)tmp1 < (float)tmp2 ? -1 : 0);
+                    operandStack.Push((float)tmp1 > (float)tmp2 ? 1 : (float)tmp1 < (float)tmp2 ? -1 : 0);
                     break;
                 // dcmpl
                 case 0x97:
                     tmp1 = pop();
                     tmp2 = pop();
-                    push((double)tmp1 > (double)tmp2 ? 1 : (double)tmp1 < (double)tmp2 ? -1 : 0);
+                    operandStack.Push((double)tmp1 > (double)tmp2 ? 1 : (double)tmp1 < (double)tmp2 ? -1 : 0);
                     break;
                 // dcmpg
                 case 0x98:
                     tmp1 = pop();
                     tmp2 = pop();
-                    push((double)tmp1 > (double)tmp2 ? 1 : (double)tmp1 < (double)tmp2 ? -1 : 0);
+                    operandStack.Push((double)tmp1 > (double)tmp2 ? 1 : (double)tmp1 < (double)tmp2 ? -1 : 0);
                     break;
                 // ifeq
                 case 0x99:
@@ -852,7 +1170,7 @@ namespace JavaInterpreter
                     break;
                 // jsr
                 case 0xa8:
-                    push((uint)pc);
+                    operandStack.Push((uint)pc);
                     pc = ((uint)getOperand(1) << 8) | (uint)getOperand(1);
                     break;
                 // ret
@@ -892,7 +1210,7 @@ namespace JavaInterpreter
                 case 0xb2:
                     if (heap.tryFindStaticField(cp, (int)getOperand(2), out field))
                     {
-                        push(field.Value);
+                        operandStack.Push(field.Value);
                     }
                     else
                     {
@@ -919,7 +1237,7 @@ namespace JavaInterpreter
                     {
                         if (classInstance.fieldNames[i] == str)
                         {
-                            push(classInstance.fields[i]);
+                            operandStack.Push(classInstance.fields[i]);
                             break;
                         }
                     }
@@ -968,11 +1286,11 @@ namespace JavaInterpreter
                     break;
                 // new
                 case 0xbb:
-                    push(heap.addObject(cp.getConstantClass((int)getOperand(2)), cp));
+                    operandStack.Push(heap.addObject(cp.getConstantClass((int)getOperand(2)), cp));
                     break;
                 // newarray
                 case 0xbc:
-                    push(heap.addArray((int)getOperand(1), (int)pop()));
+                    operandStack.Push(heap.addArray((int)getOperand(1), (int)pop()));
                     break;
                 // anewarray
                 // arraylength
