@@ -2,6 +2,7 @@
 {
     public class ConstantUtf8
     {
+        public ConstantType ConstantType = ConstantType.Utf8;
         private ushort length;
         public ushort Length => length;
 

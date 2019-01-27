@@ -7,5 +7,9 @@
         {
 
         }
+        public static Interfaces ReadInterfaces(BytecodeReader reader, ushort interfacesCount)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
