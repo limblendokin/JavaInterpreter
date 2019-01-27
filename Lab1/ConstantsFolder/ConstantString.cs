@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace JavaInterpreter.ConstantsFolder
+﻿namespace JavaInterpreter.ConstantsFolder
 {
-    class ConstantString
+    public class ConstantString
     {
         private ushort stringIndex;
         public ushort StringIndex => stringIndex;

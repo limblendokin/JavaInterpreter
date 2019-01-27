@@ -65,10 +65,11 @@
     <Compile Include="AttributesFolder\AttributeSourceFile.cs" />
     <Compile Include="AttributesFolder\AttributeStackMapTable.cs" />
     <Compile Include="AttributesFolder\AttributeSuper.cs" />
-    <Compile Include="BytecodeFileReader.cs" />
+    <Compile Include="BytecodeReader.cs" />
     <Compile Include="ClassEntity.cs" />
     <Compile Include="ClassLoader.cs" />
     <Compile Include="ConstantPool.cs" />
+    <Compile Include="ConstantsFolder\ConstantEnum.cs" />
     <Compile Include="ConstantsFolder\ConstantInterfaceMethodRef.cs" />
     <Compile Include="ConstantsFolder\ConstantPackage.cs" />
     <Compile Include="ConstantsFolder\ConstantModule.cs" />
@@ -83,18 +84,19 @@
     <Compile Include="ConstantsFolder\ConstantClass.cs" />
     <Compile Include="DependenciesLoader.cs" />
     <Compile Include="Field.cs" />
+    <Compile Include="FileBytecodeReader.cs" />
     <Compile Include="Frame.cs" />
+    <Compile Include="FrameReturn.cs" />
     <Compile Include="Heap.cs" />
-    <Compile Include="Helper.cs" />
+    <Compile Include="IFrameState.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="JavaClass.cs" />
+    <Compile Include="JavaClassInitializer.cs" />
     <Compile Include="Machine.cs" />
-    <Compile Include="Message.cs" />
     <Compile Include="Method.cs" />
     <Compile Include="ObjectReference.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VariableStack.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

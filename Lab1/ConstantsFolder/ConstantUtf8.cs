@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace JavaInterpreter.ConstantsFolder
+﻿namespace JavaInterpreter.ConstantsFolder
 {
-    class ConstantUtf8
+    public class ConstantUtf8
     {
         private ushort length;
         public ushort Length => length;
 
-        private String value;
-        public String Value => value;
+        private string value;
+        public string Value => value;
         
-        public ConstantUtf8(ushort length, String value)
+        public ConstantUtf8(ushort length, string value)
         {
             this.length = length;
             this.value = value;

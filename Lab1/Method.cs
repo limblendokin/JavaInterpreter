@@ -7,7 +7,7 @@ using JavaInterpreter.AttributesFolder;
 
 namespace JavaInterpreter
 {
-    class Method
+    public class Method
     {
         private ushort accessFlags;
         public ushort AccessFlags { get => accessFlags; }
@@ -25,14 +25,7 @@ namespace JavaInterpreter
         public ushort AttributesCount { get => attributesCount; }
 
         private Attributes attributes;
-        public bool TryGetCodeAttribute(out AttributeCode attributeCode)
-        {
-            attributeCode = attributes.AttributesTable.First(x => x.GetType().ToString() == "Lab1.AttributesFolder.AttributeCode") as AttributeCode;
-            if (attributeCode != null)
-                return true;
-            else
-                return false;
-        }
+        public Attributes Attributes => attributes;
         
 
         public Method(ushort accessFlags, ushort nameIndex, ushort descriptorIndex, ushort attributesCount, Attributes attributes, String thisMethodName)
@@ -45,22 +38,7 @@ namespace JavaInterpreter
             this.thisMethodName = thisMethodName;
         }
 
-        public static Method Create(byte[] code, ushort methodsCount, ref int curIndex, ConstantPool cp)
-        {
-            ushort accessFlags = Helper.ToUShort(code, ref curIndex);
-
-            ushort nameIndex = Helper.ToUShort(code, ref curIndex);
-
-            ushort descriptorIndex = Helper.ToUShort(code, ref curIndex);
-
-            ushort attributesCount = Helper.ToUShort(code, ref curIndex);
-
-            var attributes = Attributes.Create(code, attributesCount, ref curIndex, cp);
-
-            String thisMethodName = cp.getConstantUtf8(nameIndex).Value;
-
-            return new Method(accessFlags, nameIndex, descriptorIndex, attributesCount, attributes, thisMethodName);
-        }
+        
 
     }
 }

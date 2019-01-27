@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace JavaInterpreter.ConstantsFolder
+﻿namespace JavaInterpreter.ConstantsFolder
 {
-    class ConstantMethodType
+    public class ConstantMethodType
     {
         private ushort descriptorIndex;
         public ushort DescriptorIndex => descriptorIndex;

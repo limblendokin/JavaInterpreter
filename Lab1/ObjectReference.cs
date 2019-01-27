@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace JavaInterpreter
+﻿namespace JavaInterpreter
 {
-    class ObjectReference
+    public class ObjectReference
     {
         public enum type { ClassInstance, Array};
         private type orType;

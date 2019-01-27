@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JavaInterpreter
 {
-    class Field
+    public class Field
     {
         private uint accessFlags;
         public uint AccessFlags { get => accessFlags; }

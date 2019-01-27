@@ -1,25 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace JavaInterpreter.AttributesFolder
+﻿namespace JavaInterpreter.AttributesFolder
 {
-    class AttributeConstantValue : AttributeSuper
+    public class AttributeConstantValue
     {
-        //TODO: realization
-        public AttributeConstantValue(ushort attributeNameIndex, uint attributeLength) : base(attributeNameIndex, attributeLength)
+        //TODO: implementation
+        public AttributeConstantValue(ushort attributeNameIndex, uint attributeLength)
         {
-
-        }
-        public static AttributeConstantValue Create(byte[] code, ref int curIndex, ConstantPool cp)
-        {
-            ushort attributeNameIndex = Helper.ToUShort(code, ref curIndex);
-
-            uint attributeLength = Helper.ToUInt(code, ref curIndex);
-
-            return new AttributeConstantValue(attributeNameIndex, attributeLength);
+            
         }
     }
 }

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace JavaInterpreter.ConstantsFolder
+﻿namespace JavaInterpreter.ConstantsFolder
 {
-    class ConstantInterfaceMethodRef
+    public class ConstantInterfaceMethodRef
     {
         private ushort classIndex;
         public ushort ClassIndex => classIndex;

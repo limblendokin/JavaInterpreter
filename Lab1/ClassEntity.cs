@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JavaInterpreter
 {
-    class ClassEntity
+    public class ClassEntity
     {
         JavaClass thisClass;
         public Object[] fields;
@@ -26,8 +23,8 @@ namespace JavaInterpreter
                 // check if static
                 if (f.AccessFlags != 8)
                 {
-                    fieldNamesList.Add(jc.ConstantPool.getConstantUtf8((int)f.NameIndex).Value);
-                    fieldDescriptorsList.Add(jc.ConstantPool.getConstantUtf8((int)f.DescriptorIndex).Value);
+                    fieldNamesList.Add(jc.ConstantPool.GetConstantUtf8((int)f.NameIndex).Value);
+                    fieldDescriptorsList.Add(jc.ConstantPool.GetConstantUtf8((int)f.DescriptorIndex).Value);
                     fieldsList.Add(f.Value);
                 }
             }

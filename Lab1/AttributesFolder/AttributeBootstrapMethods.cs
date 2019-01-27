@@ -1,25 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace JavaInterpreter.AttributesFolder
+﻿namespace JavaInterpreter.AttributesFolder
 {
-    class AttributeBootstrapMethods : AttributeSuper
+    public class AttributeBootstrapMethods
     {
-        // TODO: realization 
-        public AttributeBootstrapMethods(ushort attributeNameIndex, uint attributeLength) : base(attributeNameIndex, attributeLength)
+        // TODO: implementation 
+        public AttributeBootstrapMethods(ushort attributeNameIndex, uint attributeLength)
         {
 
-        }
-        public static AttributeBootstrapMethods Create(byte[] code, ref int curIndex, ConstantPool cp)
-        {
-            ushort attributeNameIndex = Helper.ToUShort(code, ref curIndex);
-
-            uint attributeLength = Helper.ToUInt(code, ref curIndex);
-
-            return new AttributeBootstrapMethods(attributeNameIndex, attributeLength);
         }
     }
 }

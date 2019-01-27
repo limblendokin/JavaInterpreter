@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace JavaInterpreter
+﻿namespace JavaInterpreter
 {
-    class Interfaces
+    public class Interfaces
     {
-        // TODO: realization
+        // TODO: implementation
         public Interfaces()
         {
 

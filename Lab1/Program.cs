@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JavaInterpreter
 {
@@ -22,11 +17,10 @@ namespace JavaInterpreter
                 className = "AdditionWithFunction";
                 Console.Write(className);
             }
-            String directory = @"C:\Documents\Study\LaPP";
-            ClassLoader classLoader = new ClassLoader(directory, className);
+            String directory = @"C:\Documents\Study\LaPP\";
             
-            Machine m = new Machine(classLoader.LoadClasses());
-            exitCode = m.run();
+            Machine m = new Machine(directory+className+@".class");
+            exitCode = m.Run();
             Console.WriteLine("Program ended with code " + exitCode);
             Console.ReadKey();
             

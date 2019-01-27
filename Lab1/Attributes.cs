@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using JavaInterpreter.AttributesFolder;
 namespace JavaInterpreter
 {
-    class Attributes
+    public class Attributes
     {
-        private List<AttributeSuper> attributesTable;
-        public List<AttributeSuper> AttributesTable
+        private List<object> attributesTable;
+        public List<object> AttributesTable
         {
             get
             {
@@ -23,7 +19,7 @@ namespace JavaInterpreter
         /// <param name="attributesCount"></param>
         /// <param name="curIndex"></param>
         /// <param name="cp"></param>
-        public Attributes(List<AttributeSuper> attributesTable)
+        public Attributes(List<object> attributesTable)
         {
             this.attributesTable = attributesTable;
         }
